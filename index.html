@@ -3,1344 +3,964 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSR Team Schedule</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<title>OSR Schedule — Current vs Proposed 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Cabinet+Grotesk:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0e1a;
-    --surface: #111827;
-    --surface2: #1a2235;
-    --border: #1e2d45;
-    --accent: #3b82f6;
-    --accent2: #06b6d4;
-    --accent3: #8b5cf6;
-    --gold: #f59e0b;
-    --green: #10b981;
-    --red: #ef4444;
-    --yellow: #f59e0b;
-    --text: #e2e8f0;
-    --text-muted: #64748b;
-    --text-dim: #94a3b8;
-    --day: #3b82f6;
-    --mid: #8b5cf6;
-    --night: #06b6d4;
-    --key: #f59e0b;
-    --agent: #10b981;
-    --brokerage: #ec4899;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    padding: 80px 40px 60px;
-    text-align: center;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -100px; left: 50%;
-    transform: translateX(-50%);
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .hero-badge {
-    display: inline-block;
-    background: rgba(59,130,246,0.1);
-    border: 1px solid rgba(59,130,246,0.3);
-    color: var(--accent);
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    padding: 6px 16px;
-    border-radius: 100px;
-    margin-bottom: 24px;
-  }
-
-  .hero h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(36px, 5vw, 64px);
-    font-weight: 800;
-    line-height: 1.1;
-    background: linear-gradient(135deg, #e2e8f0 0%, #3b82f6 50%, #06b6d4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 16px;
-  }
-
-  .hero p {
-    color: var(--text-dim);
-    font-size: 16px;
-    max-width: 600px;
-    margin: 0 auto 40px;
-    line-height: 1.7;
-  }
-
-  /* NAV TABS */
-  .nav-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    padding: 0 40px 60px;
-  }
-
-  .tab-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .tab-btn:hover {
-    border-color: var(--accent);
-    color: var(--text);
-  }
-
-  .tab-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
-    font-weight: 600;
-  }
-
-  /* SECTIONS */
-  .section {
-    display: none;
-    padding: 0 40px 80px;
-    max-width: 1400px;
-    margin: 0 auto;
-    animation: fadeIn 0.3s ease;
-  }
-
-  .section.active { display: block; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .section-subtitle {
-    color: var(--text-dim);
-    font-size: 14px;
-    margin-bottom: 40px;
-    line-height: 1.6;
-  }
-
-  /* SHIFT LEGEND */
-  .shift-legend {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 40px;
-  }
-
-  .shift-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 13px;
-  }
-
-  .shift-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .shift-badge .times {
-    color: var(--text-dim);
-    font-size: 12px;
-  }
-
-  /* SF LEGEND */
-  .sf-legend {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 32px;
-  }
-
-  .sf-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  .sf-key { background: rgba(245,158,11,0.15); color: var(--key); border: 1px solid rgba(245,158,11,0.3); }
-  .sf-agent { background: rgba(16,185,129,0.15); color: var(--agent); border: 1px solid rgba(16,185,129,0.3); }
-  .sf-brokerage { background: rgba(236,72,153,0.15); color: var(--brokerage); border: 1px solid rgba(236,72,153,0.3); }
-
-  /* REP CARDS GRID */
-  .reps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 20px;
-    margin-bottom: 40px;
-  }
-
-  .rep-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
-    transition: border-color 0.2s, transform 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .rep-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-  }
-
-  .rep-card.day::before { background: linear-gradient(90deg, var(--day), transparent); }
-  .rep-card.mid::before { background: linear-gradient(90deg, var(--mid), transparent); }
-  .rep-card.night::before { background: linear-gradient(90deg, var(--night), transparent); }
-
-  .rep-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
-
-  .rep-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 16px;
-  }
-
-  .rep-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-
-  .rep-role {
-    font-size: 12px;
-    color: var(--text-dim);
-    font-weight: 500;
-  }
-
-  .role-badge {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 100px;
-    white-space: nowrap;
-  }
-
-  .role-osr { background: rgba(59,130,246,0.15); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
-  .role-osr2 { background: rgba(139,92,246,0.15); color: var(--accent3); border: 1px solid rgba(139,92,246,0.3); }
-
-  .rep-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .info-item label {
-    display: block;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-
-  .info-item value {
-    display: block;
-    font-size: 13px;
-    color: var(--text);
-    font-weight: 500;
-  }
-
-  .shift-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 6px;
-  }
-
-  .shift-day { background: rgba(59,130,246,0.15); color: var(--day); }
-  .shift-mid { background: rgba(139,92,246,0.15); color: var(--mid); }
-  .shift-night { background: rgba(6,182,212,0.15); color: var(--night); }
-
-  .rep-footer {
-    border-top: 1px solid var(--border);
-    padding-top: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: gap;
-    gap: 8px;
-  }
-
-  .days-display {
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-
-  .days-display span {
-    color: var(--text);
-    font-weight: 500;
-  }
-
-  /* SHIFT SECTIONS */
-  .shift-section {
-    margin-bottom: 48px;
-  }
-
-  .shift-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
-    padding: 16px 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-  }
-
-  .shift-header.day { background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.2); }
-  .shift-header.mid { background: rgba(139,92,246,0.08); border-color: rgba(139,92,246,0.2); }
-  .shift-header.night { background: rgba(6,182,212,0.08); border-color: rgba(6,182,212,0.2); }
-
-  .shift-icon { font-size: 24px; }
-
-  .shift-info h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-  }
-
-  .shift-info p {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-top: 2px;
-  }
-
-  /* SCHEDULE TABLE */
-  .schedule-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    margin-bottom: 16px;
-  }
-
-  .schedule-table th {
-    background: var(--surface2);
-    color: var(--text-dim);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .schedule-table td {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
-
-  .schedule-table tr:last-child td { border-bottom: none; }
-
-  .schedule-table tr:hover td { background: rgba(255,255,255,0.02); }
-
-  .schedule-table tbody tr td:first-child {
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .table-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 24px;
-    overflow-x: auto;
-  }
-
-  /* COVERAGE TABLE */
-  .coverage-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
-
-  .coverage-table th {
-    background: var(--surface2);
-    color: var(--text-dim);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 10px 14px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-
-  .coverage-table td {
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
-
-  .coverage-table tr:last-child td { border-bottom: none; }
-
-  .check { color: var(--green); font-weight: 600; }
-  .warn { color: var(--red); font-weight: 600; }
-  .low { color: var(--yellow); font-weight: 600; }
-
-  .coverage-names {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-
-  .coverage-name {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    white-space: nowrap;
-  }
-
-  /* GAPS SECTION */
-  .gaps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-    margin-bottom: 40px;
-  }
-
-  .gap-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-  }
-
-  .gap-card.low { border-left: 3px solid var(--green); }
-  .gap-card.medium { border-left: 3px solid var(--yellow); }
-
-  .gap-risk {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 100px;
-    margin-bottom: 12px;
-  }
-
-  .gap-risk.low { background: rgba(16,185,129,0.15); color: var(--green); }
-  .gap-risk.medium { background: rgba(245,158,11,0.15); color: var(--yellow); }
-
-  .gap-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .gap-detail {
-    font-size: 12px;
-    color: var(--text-dim);
-    line-height: 1.6;
-  }
-
-  .gap-detail strong { color: var(--text); }
-
-  /* WEEKEND SUMMARY */
-  .weekend-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 40px;
-  }
-
-  .weekend-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-  }
-
-  .weekend-card-header {
-    padding: 16px 20px;
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-  }
-
-  .weekend-shift-row {
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .weekend-shift-row:last-child { border-bottom: none; }
-
-  .weekend-shift-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-dim);
-  }
-
-  .weekend-names {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-
-  /* CHANGES SECTION */
-  .changes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 16px;
-    margin-bottom: 40px;
-  }
-
-  .change-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-  }
-
-  .change-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .change-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 12px;
-  }
-
-  .change-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    flex-shrink: 0;
-  }
-
-  .change-old {
-    font-size: 12px;
-    color: var(--red);
-    text-decoration: line-through;
-    text-align: right;
-  }
-
-  .change-arrow { color: var(--text-muted); font-size: 14px; }
-
-  .change-new {
-    font-size: 12px;
-    color: var(--green);
-    font-weight: 600;
-    text-align: right;
-  }
-
-  .change-rest {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-
-  .change-rest strong { color: var(--green); }
-
-  /* STAT CARDS */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 16px;
-    margin-bottom: 40px;
-  }
-
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-  }
-
-  .stat-number {
-    font-family: 'Syne', sans-serif;
-    font-size: 36px;
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .stat-label {
-    font-size: 12px;
-    color: var(--text-dim);
-    font-weight: 500;
-  }
-
-  /* DIVIDER */
-  .divider {
-    height: 1px;
-    background: var(--border);
-    margin: 40px 0;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .hero { padding: 60px 20px 40px; }
-    .nav-tabs { padding: 0 20px 40px; }
-    .section { padding: 0 20px 60px; }
-    .weekend-grid { grid-template-columns: 1fr; }
-    .rep-info { grid-template-columns: 1fr; }
-  }
-
-  /* TOOLTIP */
-  .tooltip {
-    position: relative;
-    cursor: help;
-  }
-
-  .tooltip:hover::after {
-    content: attr(data-tip);
-    position: absolute;
-    bottom: 120%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1e293b;
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-size: 11px;
-    padding: 6px 10px;
-    border-radius: 6px;
-    white-space: nowrap;
-    z-index: 10;
-  }
-
-  .new-tag {
-    background: rgba(16,185,129,0.15);
-    color: var(--green);
-    border: 1px solid rgba(16,185,129,0.3);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 2px 8px;
-    border-radius: 100px;
-  }
+:root {
+  --bg: #080b10;
+  --surface: #0f1318;
+  --surface2: #161c24;
+  --surface3: #1e2630;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e8edf5;
+  --muted: #5a6578;
+  --muted2: #8a95a8;
+
+  --blockA: #7c3aed;
+  --blockA-bg: rgba(124,58,237,0.12);
+  --blockA-border: rgba(124,58,237,0.3);
+  --blockB: #0891b2;
+  --blockB-bg: rgba(8,145,178,0.12);
+  --blockB-border: rgba(8,145,178,0.3);
+  --blockC: #059669;
+  --blockC-bg: rgba(5,150,105,0.12);
+  --blockC-border: rgba(5,150,105,0.3);
+
+  --osr1: #38bdf8;
+  --osr2: #a78bfa;
+  --tl:   #fbbf24;
+  --mgr:  #fb923c;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── HEADER ── */
+.site-header {
+  padding: 2.5rem 3rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+.site-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 120% at 20% 50%, rgba(124,58,237,0.07) 0%, transparent 60%),
+              radial-gradient(ellipse 30% 80% at 80% 50%, rgba(8,145,178,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+.header-title h1 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--text);
+}
+.header-title h1 em {
+  font-style: normal;
+  background: linear-gradient(90deg, #7c3aed, #0891b2, #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header-title p {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+.header-badges { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border2);
+  color: var(--muted2);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.badge strong { color: var(--text); font-weight: 500; }
+
+/* ── TABS ── */
+.tabs-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0 3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 0.85rem 1.4rem;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--muted2); }
+.tab-btn.active { color: var(--text); border-bottom-color: #7c3aed; }
+
+/* ── MAIN ── */
+main { padding: 2.5rem 3rem; }
+.section { display: none; animation: fadeUp 0.3s ease both; }
+.section.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION HEADING ── */
+.sec-head {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+.sec-head-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--blockA); flex-shrink: 0;
+}
+.sec-head-title { font-size: 1rem; font-weight: 800; letter-spacing: 0.01em; }
+.sec-head-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; color: var(--muted2);
+  letter-spacing: 0.06em; margin-left: auto;
+}
+
+/* ── CURRENT SCHEDULE (original heatmap style) ── */
+.hm-wrap { overflow-x: auto; margin-bottom: 2rem; }
+.hm-grid {
+  display: grid;
+  grid-template-columns: 52px repeat(7, 1fr);
+  gap: 2px;
+  min-width: 600px;
+  font-family: 'DM Mono', monospace;
+}
+.hm-th {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.7rem; font-weight: 800;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  text-align: center; padding: 0.6rem 0.3rem; color: var(--text);
+}
+.hm-th-date { font-size: 0.6rem; color: var(--muted); font-weight: 400; display: block; margin-top: 2px; font-family: 'DM Mono', monospace; }
+.hm-tl { font-size: 0.58rem; color: var(--muted); text-align: right; padding-right: 6px; line-height: 26px; }
+.hm-cell {
+  height: 26px; border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; font-weight: 500;
+  cursor: default; transition: opacity 0.1s, transform 0.1s;
+}
+.hm-cell:hover { opacity: 0.82; transform: scale(1.06); z-index: 10; position: relative; }
+
+/* ── PROPOSED SCHEDULE ── */
+.blocks-legend {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  font-family: 'DM Mono', monospace; font-size: 0.68rem;
+}
+.bl-item { display: flex; align-items: center; gap: 0.5rem; }
+.bl-swatch { width: 12px; height: 12px; border-radius: 2px; }
+
+.proposed-grid-wrap { overflow-x: auto; }
+.proposed-grid {
+  display: grid;
+  grid-template-columns: 52px repeat(7, 1fr);
+  gap: 2px;
+  min-width: 600px;
+  font-family: 'DM Mono', monospace;
+}
+.pg-th {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 0.7rem; font-weight: 800;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  text-align: center; padding: 0.6rem 0.3rem; color: var(--text);
+}
+.pg-th-date { font-size: 0.6rem; color: var(--muted); font-weight: 400; display: block; margin-top: 2px; font-family: 'DM Mono', monospace; }
+.pg-tl { font-size: 0.58rem; color: var(--muted); text-align: right; padding-right: 6px; line-height: 28px; }
+.pg-cell {
+  height: 28px; border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.58rem; font-weight: 500; gap: 3px;
+  cursor: default; transition: opacity 0.1s, transform 0.1s;
+  padding: 0 4px; overflow: hidden;
+  white-space: nowrap;
+}
+.pg-cell:hover { opacity: 0.85; transform: scale(1.04); z-index: 10; position: relative; }
+.pg-cell.blockA { background: var(--blockA-bg); color: #c4b5fd; border: 1px solid var(--blockA-border); }
+.pg-cell.blockB { background: var(--blockB-bg); color: #7dd3fc; border: 1px solid var(--blockB-border); }
+.pg-cell.blockC { background: var(--blockC-bg); color: #6ee7b7; border: 1px solid var(--blockC-border); }
+.pg-cell.empty  { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+.pg-name { font-weight: 600; font-size: 0.55rem; }
+
+/* ── TEAM CARDS ── */
+.team-section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;
+}
+.block-section { margin-bottom: 2.5rem; }
+.block-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.3rem 0.9rem; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.block-label.A { background: var(--blockA-bg); color: #c4b5fd; border: 1px solid var(--blockA-border); }
+.block-label.B { background: var(--blockB-bg); color: #7dd3fc; border: 1px solid var(--blockB-border); }
+.block-label.C { background: var(--blockC-bg); color: #6ee7b7; border: 1px solid var(--blockC-border); }
+.block-label.EX { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 10px; }
+.person-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 1rem;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.person-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.pc-top { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.7rem; }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 800; flex-shrink: 0;
+}
+.pc-name { font-size: 0.88rem; font-weight: 800; color: var(--text); }
+.pc-role { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted2); margin-top: 1px; }
+.pc-body {
+  font-family: 'DM Mono', monospace; font-size: 0.62rem;
+  color: var(--muted); border-top: 1px solid var(--border);
+  padding-top: 0.6rem; line-height: 1.9;
+}
+.pc-body strong { color: var(--muted2); }
+.sf-pill {
+  display: inline-block; font-size: 0.55rem; padding: 1px 6px;
+  border-radius: 999px; font-weight: 600; letter-spacing: 0.04em;
+  margin-top: 3px;
+}
+.sf-key    { background: rgba(167,139,250,0.15); color: #a78bfa; }
+.sf-brok   { background: rgba(56,189,248,0.15); color: #38bdf8; }
+.sf-agent  { background: rgba(251,191,36,0.15); color: #fbbf24; }
+.sf-seo    { background: rgba(52,211,153,0.15); color: #34d399; }
+.sf-sspw   { background: rgba(251,146,60,0.15); color: #fb923c; }
+.sf-train  { background: rgba(100,116,139,0.15); color: #94a3b8; }
+
+/* ── ROTATION ── */
+.rotation-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem;
+  margin-bottom: 2rem;
+}
+@media (max-width: 768px) { .rotation-grid { grid-template-columns: 1fr; } }
+.rotation-cycle {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.25rem;
+}
+.rc-period {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted2); margin-bottom: 1rem;
+}
+.rc-row {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+  font-size: 0.78rem;
+}
+.rc-row:last-child { border-bottom: none; }
+.rc-block {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  padding: 2px 7px; border-radius: 4px; flex-shrink: 0;
+  font-weight: 600;
+}
+.rc-block.A { background: var(--blockA-bg); color: #c4b5fd; }
+.rc-block.B { background: var(--blockB-bg); color: #7dd3fc; }
+.rc-block.C { background: var(--blockC-bg); color: #6ee7b7; }
+.rc-group { font-weight: 700; font-size: 0.8rem; }
+.rc-arrow { color: var(--muted); font-size: 0.7rem; margin-left: auto; }
+
+.tl-handoff {
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;
+}
+.tl-handoff h3 {
+  font-size: 0.85rem; font-weight: 800; letter-spacing: 0.02em;
+  margin-bottom: 1rem; color: var(--text);
+}
+.handoff-row {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.75rem 0; border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.handoff-row:last-child { border-bottom: none; }
+.handoff-time {
+  font-family: 'DM Mono', monospace; font-size: 0.75rem;
+  font-weight: 500; color: #fbbf24; min-width: 100px;
+}
+.handoff-desc { font-size: 0.78rem; color: var(--muted2); flex: 1; }
+.handoff-tls { font-size: 0.78rem; font-weight: 700; color: var(--text); }
+
+/* ── GAP ANALYSIS ── */
+.gap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 12px; }
+.gap-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.25rem; position: relative; overflow: hidden;
+}
+.gap-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+}
+.gap-card.ok::before { background: #059669; }
+.gap-card.warn::before { background: #d97706; }
+.gap-card.info::before { background: #0891b2; }
+.gap-card-title {
+  font-size: 0.85rem; font-weight: 800; color: var(--text);
+  margin-bottom: 0.5rem;
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;
+}
+.status-pill {
+  font-family: 'DM Mono', monospace; font-size: 0.58rem;
+  padding: 2px 8px; border-radius: 999px; letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.pill-ok   { background: rgba(5,150,105,0.15); color: #34d399; }
+.pill-warn { background: rgba(217,119,6,0.15);  color: #fbbf24; }
+.pill-info { background: rgba(8,145,178,0.15);   color: #7dd3fc; }
+.gap-body  { font-family: 'DM Mono', monospace; font-size: 0.67rem; color: var(--muted2); line-height: 1.75; }
+
+/* ── CURRENT SCHEDULE CHIPS ── */
+.cs-corner { font-size:0.58rem; color:var(--muted); text-align:right; padding:0.5rem 6px 0 0; }
+.cs-day-hdr {
+  background:var(--surface2); border-radius:5px 5px 0 0;
+  padding:0.55rem 0.4rem; text-align:center;
+}
+.cs-day-hdr .cs-dow { font-family:'Cabinet Grotesk',sans-serif; font-size:0.72rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:var(--text); }
+.cs-day-hdr .cs-date { font-size:0.58rem; color:var(--muted); margin-top:1px; }
+.cs-time { font-size:0.56rem; color:var(--muted); text-align:right; padding-right:5px; line-height:26px; }
+.cs-cell { min-height:26px; background:var(--surface); padding:2px; }
+.cs-chip {
+  display:block; border-radius:3px; padding:2px 5px; margin-bottom:1px;
+  font-size:0.56rem; font-weight:600; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; letter-spacing:0.02em;
+  cursor:default;
+}
+.cs-chip.osr1 { background:rgba(56,189,248,0.13); color:#7dd3fc; }
+.cs-chip.osr2 { background:rgba(167,139,250,0.15); color:#c4b5fd; }
+.cs-chip.tl   { background:rgba(251,191,36,0.15);  color:#fbbf24; }
+.cs-chip.mgr  { background:rgba(251,146,60,0.13);  color:#fb923c; }
+
+/* ── TOOLTIP ── */
+.tooltip {
+  position: fixed;
+  background: #1a2030; border: 1px solid var(--border2);
+  border-radius: 8px; padding: 10px 14px;
+  font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--text);
+  pointer-events: none; z-index: 9999; display: none;
+  max-width: 260px; line-height: 1.65;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+.tt-title { font-family: 'Cabinet Grotesk', sans-serif; font-size: 0.78rem; font-weight: 800; margin-bottom: 4px; }
+.tt-names { color: #8a95a8; }
+.tt-flag  { color: #fbbf24; margin-top: 3px; }
+.tt-block { margin-top: 3px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .site-header, .tabs-bar, main { padding-left: 1.25rem; padding-right: 1.25rem; }
+}
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-badge">Luxury Presence · OSR Team</div>
-  <h1>OSR Schedule Dashboard</h1>
-  <p>Complete schedule overview for OSR and OSR II reps — current schedules, proposed changes, shift assignments, and 24/7 coverage analysis.</p>
-</div>
+<header class="site-header">
+  <div class="header-title">
+    <h1>OSR Schedule <em>2026</em></h1>
+    <p>Current schedule &amp; Proposed revamp &nbsp;·&nbsp; Philippine Time (PHT)</p>
+  </div>
+  <div class="header-badges">
+    <div class="badge">Team: <strong>22 reps</strong></div>
+    <div class="badge">Blocks: <strong>3 × 8h</strong></div>
+    <div class="badge">Rotation: <strong>4-month cycles</strong></div>
+    <div class="badge">TLs: <strong>2 → 3</strong></div>
+  </div>
+</header>
 
-<div class="nav-tabs">
-  <button class="tab-btn active" onclick="showTab('overview')">📊 Overview</button>
-  <button class="tab-btn" onclick="showTab('current')">📋 Current Schedules</button>
-  <button class="tab-btn" onclick="showTab('new-schedule')">🌟 New Schedule</button>
-  <button class="tab-btn" onclick="showTab('coverage')">🗓️ Coverage Analysis</button>
-  <button class="tab-btn" onclick="showTab('changes')">✏️ Changes Made</button>
-  <button class="tab-btn" onclick="showTab('gaps')">⚠️ Gaps & Risks</button>
-</div>
+<nav class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('current',this)">Current Schedule</button>
+  <button class="tab-btn" onclick="switchTab('proposed',this)">Proposed Schedule</button>
+  <button class="tab-btn" onclick="switchTab('team',this)">Team Breakdown</button>
+  <button class="tab-btn" onclick="switchTab('rotation',this)">Rotation Plan</button>
+  <button class="tab-btn" onclick="switchTab('gaps',this)">Gap Analysis</button>
+</nav>
 
-<!-- OVERVIEW -->
-<div id="tab-overview" class="section active">
-  <div class="section-title">Team Overview</div>
-  <div class="section-subtitle">The OSR team is the only team that operates 24 hours a day, 7 days a week at Luxury Presence.</div>
+<main>
 
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-number" style="color: var(--accent)">18</div>
-      <div class="stat-label">Total Reps</div>
+<!-- ══════════════════════════════════════════════════════ CURRENT ══ -->
+<section id="tab-current" class="section active">
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#5a6578"></div>
+    <div class="sec-head-title">Current Schedule — May 11–17, 2026</div>
+    <div class="sec-head-sub">Named shifts · all times PHT</div>
+  </div>
+
+  <div class="blocks-legend" style="margin-bottom:1.25rem">
+    <div class="bl-item"><div class="bl-swatch" style="background:#38bdf8;opacity:0.7;border-radius:2px"></div><span style="color:#7dd3fc">OSR I</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#a78bfa;opacity:0.7;border-radius:2px"></div><span style="color:#c4b5fd">OSR II</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#fbbf24;opacity:0.7;border-radius:2px"></div><span style="color:#fbbf24">Team Lead</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#fb923c;opacity:0.7;border-radius:2px"></div><span style="color:#fb923c">Manager</span></div>
+  </div>
+
+  <div class="hm-wrap" style="margin-bottom:2.5rem">
+    <div id="currentScheduleGrid" style="display:grid;grid-template-columns:52px repeat(7,1fr);gap:2px;min-width:700px;font-family:'DM Mono',monospace;"></div>
+  </div>
+
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#5a6578"></div>
+    <div class="sec-head-title">Coverage Heatmap</div>
+    <div class="sec-head-sub">Headcount per hour · hover for names</div>
+  </div>
+  <div class="hm-wrap">
+    <div class="hm-grid" id="currentHeatmap"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ PROPOSED ══ -->
+<section id="tab-proposed" class="section">
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#7c3aed"></div>
+    <div class="sec-head-title">Proposed Schedule — 3-Block System</div>
+    <div class="sec-head-sub">Color = block · hover for names · PHT</div>
+  </div>
+
+  <div class="blocks-legend">
+    <div class="bl-item"><div class="bl-swatch" style="background:#7c3aed"></div><span style="color:#c4b5fd">Block A 22:00–06:00</span><span style="color:var(--muted);margin-left:4px">(07:00–15:00 PDT)</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#0891b2"></div><span style="color:#7dd3fc">Block B 06:00–14:00</span><span style="color:var(--muted);margin-left:4px">(15:00–23:00 PDT)</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#059669"></div><span style="color:#6ee7b7">Block C 14:00–22:00</span><span style="color:var(--muted);margin-left:4px">(23:00–07:00 PDT)</span></div>
+  </div>
+
+  <div class="proposed-grid-wrap">
+    <div class="proposed-grid" id="proposedGrid"></div>
+  </div>
+
+  <!-- Proposed heatmap -->
+  <div class="sec-head" style="margin-top:2.5rem">
+    <div class="sec-head-dot" style="background:#0891b2"></div>
+    <div class="sec-head-title">Proposed Coverage Heatmap</div>
+    <div class="sec-head-sub">Headcount per hour</div>
+  </div>
+  <div class="hm-wrap">
+    <div class="hm-grid" id="proposedHeatmap"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ TEAM ══ -->
+<section id="tab-team" class="section">
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#fbbf24"></div>
+    <div class="sec-head-title">Team Breakdown by Block</div>
+    <div class="sec-head-sub">Proposed assignments</div>
+  </div>
+
+  <div class="block-section">
+    <div class="block-label A">◆ Block A &nbsp; 22:00–06:00 PHT &nbsp; TL: Greg &nbsp;·&nbsp; 2× Key Support</div>
+    <div class="team-grid" id="teamA"></div>
+  </div>
+  <div class="block-section">
+    <div class="block-label B">◆ Block B &nbsp; 06:00–14:00 PHT &nbsp; TL: Richelle</div>
+    <div class="team-grid" id="teamB"></div>
+  </div>
+  <div class="block-section">
+    <div class="block-label C">◆ Block C &nbsp; 14:00–22:00 PHT &nbsp; TL: Jurenne (promoted)</div>
+    <div class="team-grid" id="teamC"></div>
+  </div>
+  <div class="block-section">
+    <div class="block-label EX">★ Exceptions &nbsp; 03:00–11:00 PHT &nbsp; No rotation</div>
+    <div class="team-grid" id="teamEx"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ ROTATION ══ -->
+<section id="tab-rotation" class="section">
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#059669"></div>
+    <div class="sec-head-title">4-Month Rotation Plan</div>
+    <div class="sec-head-sub">Groups rotate as a team · TL travels with their group</div>
+  </div>
+
+  <div class="rotation-grid">
+    <div class="rotation-cycle">
+      <div class="rc-period">Cycle 1 &nbsp; Jan – Apr</div>
+      <div class="rc-row"><span class="rc-block A">Block A</span><span class="rc-group">Group 1</span><span class="rc-arrow">22:00–06:00</span></div>
+      <div class="rc-row"><span class="rc-block B">Block B</span><span class="rc-group">Group 2</span><span class="rc-arrow">06:00–14:00</span></div>
+      <div class="rc-row"><span class="rc-block C">Block C</span><span class="rc-group">Group 3</span><span class="rc-arrow">14:00–22:00</span></div>
     </div>
-    <div class="stat-card">
-      <div class="stat-number" style="color: var(--accent2)">14</div>
-      <div class="stat-label">OSR Reps</div>
+    <div class="rotation-cycle">
+      <div class="rc-period">Cycle 2 &nbsp; May – Aug</div>
+      <div class="rc-row"><span class="rc-block B">Block B</span><span class="rc-group">Group 1</span><span class="rc-arrow">06:00–14:00</span></div>
+      <div class="rc-row"><span class="rc-block C">Block C</span><span class="rc-group">Group 2</span><span class="rc-arrow">14:00–22:00</span></div>
+      <div class="rc-row"><span class="rc-block A">Block A</span><span class="rc-group">Group 3</span><span class="rc-arrow">22:00–06:00</span></div>
     </div>
-    <div class="stat-card">
-      <div class="stat-number" style="color: var(--accent3)">4</div>
-      <div class="stat-label">OSR II Reps</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number" style="color: var(--green)">3</div>
-      <div class="stat-label">Shifts</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number" style="color: var(--gold)">24/7</div>
-      <div class="stat-label">Coverage</div>
+    <div class="rotation-cycle">
+      <div class="rc-period">Cycle 3 &nbsp; Sep – Dec</div>
+      <div class="rc-row"><span class="rc-block C">Block C</span><span class="rc-group">Group 1</span><span class="rc-arrow">14:00–22:00</span></div>
+      <div class="rc-row"><span class="rc-block A">Block A</span><span class="rc-group">Group 2</span><span class="rc-arrow">22:00–06:00</span></div>
+      <div class="rc-row"><span class="rc-block B">Block B</span><span class="rc-group">Group 3</span><span class="rc-arrow">06:00–14:00</span></div>
     </div>
   </div>
 
-  <div class="shift-legend">
-    <div class="shift-badge">
-      <div class="shift-dot" style="background: var(--day)"></div>
-      <div>
-        <div style="font-weight:600; font-size:13px;">🌞 Day Team</div>
-        <div class="times">11:00 PM – 7:00 AM PHT &nbsp;|&nbsp; 8:00 AM – 4:00 PM PDT</div>
-      </div>
+  <!-- Group breakdown -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:2rem;">
+    <div style="background:var(--surface);border:1px solid var(--blockA-border);border-radius:10px;padding:1.1rem;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:#c4b5fd;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.6rem">Group 1 · TL: Greg</div>
+      <div style="font-size:0.8rem;font-weight:700;color:var(--text);line-height:2">Joseph · Xander · Dante · Kenneth · Neil · JP</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.5rem">Starts in Block A (Graveyard) · 2× Key Support</div>
     </div>
-    <div class="shift-badge">
-      <div class="shift-dot" style="background: var(--mid)"></div>
-      <div>
-        <div style="font-weight:600; font-size:13px;">☀️ Mid Shift</div>
-        <div class="times">3:00 PM – 11:00 PM PHT &nbsp;|&nbsp; 12:00 AM – 8:00 AM PDT</div>
-      </div>
+    <div style="background:var(--surface);border:1px solid var(--blockB-border);border-radius:10px;padding:1.1rem;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:#7dd3fc;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.6rem">Group 2 · TL: Richelle</div>
+      <div style="font-size:0.8rem;font-weight:700;color:var(--text);line-height:2">Larry · Dianne · Renn · Dan · Gretchen · Pau</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.5rem">Starts in Block B (Morning)</div>
     </div>
-    <div class="shift-badge">
-      <div class="shift-dot" style="background: var(--night)"></div>
-      <div>
-        <div style="font-weight:600; font-size:13px;">🌙 Night Team</div>
-        <div class="times">7:00 AM – 3:00 PM PHT &nbsp;|&nbsp; 4:00 PM – 12:00 AM PDT</div>
-      </div>
+    <div style="background:var(--surface);border:1px solid var(--blockC-border);border-radius:10px;padding:1.1rem;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:#6ee7b7;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.6rem">Group 3 · TL: Jurenne</div>
+      <div style="font-size:0.8rem;font-weight:700;color:var(--text);line-height:2">Rae · Nomar · Jomari · Jel · Nam</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.5rem">Starts in Block C (Afternoon)</div>
     </div>
   </div>
 
-  <div class="sf-legend">
-    <div class="sf-pill sf-key">🔑 Key Support</div>
-    <div class="sf-pill sf-agent">🌐 Agent Subdomain</div>
-    <div class="sf-pill sf-brokerage">🏢 Brokerage Change</div>
-  </div>
-
-  <div class="section-title" style="font-size:20px; margin-bottom:8px;">Special Force Assignment</div>
-  <div class="section-subtitle">Each shift must have at least one rep from each Special Force type.</div>
-
-  <div class="table-wrap">
-    <table class="schedule-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Role</th>
-          <th>Special Force</th>
-          <th>Shift</th>
-          <th>Reports To</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Neil Bernoulli Velasco</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td><span class="shift-tag shift-day">🌞 Day</span></td><td>Greg Diaz</td></tr>
-        <tr><td>Kenneth Andrew Labao Maranan</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td><span class="shift-tag shift-day">🌞 Day</span></td><td>Greg Diaz</td></tr>
-        <tr><td>Nicole Macasaet</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td><span class="shift-tag shift-day">🌞 Day</span></td><td>Greg Diaz</td></tr>
-        <tr><td>John Philip (JP) Gianan</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td><span class="shift-tag shift-day">🌞 Day</span></td><td>Greg Diaz</td></tr>
-        <tr><td>Judiel Cruz</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td><span class="shift-tag shift-day">🌞 Day</span></td><td>Greg Diaz</td></tr>
-        <tr><td>Renn Ryan Rodriguez</td><td><span class="role-badge role-osr2">OSR II</span></td><td><span class="sf-pill sf-key">Key Support</span></td><td><span class="shift-tag shift-day">🌞 Day</span></td><td>Richelle Lumanog</td></tr>
-        <tr><td>Dan Joseph Icasiam</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td><span class="shift-tag shift-mid">☀️ Mid</span></td><td>Greg Diaz</td></tr>
-        <tr><td>Dianne Reyes Non</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td><span class="shift-tag shift-mid">☀️ Mid</span></td><td>Greg Diaz</td></tr>
-        <tr><td>Jurenne Dominguez</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td><span class="shift-tag shift-mid">☀️ Mid</span></td><td>Greg Diaz</td></tr>
-        <tr><td>Nomar Villamer</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td><span class="shift-tag shift-mid">☀️ Mid</span></td><td>Greg Diaz</td></tr>
-        <tr><td>Gretchen Sevillano</td><td><span class="role-badge role-osr">OSR</span></td><td>—</td><td><span class="shift-tag shift-mid">☀️ Mid</span></td><td>Richelle Lumanog</td></tr>
-        <tr><td>Rae Palenzuela</td><td><span class="role-badge role-osr2">OSR II</span></td><td><span class="sf-pill sf-key">Key Support</span></td><td><span class="shift-tag shift-mid">☀️ Mid</span></td><td>Greg Diaz</td></tr>
-        <tr><td>Joseph Solmayor</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td><span class="shift-tag shift-night">🌙 Night</span></td><td>Richelle Lumanog</td></tr>
-        <tr><td>Larry Mabuti Jr.</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td><span class="shift-tag shift-night">🌙 Night</span></td><td>Richelle Lumanog</td></tr>
-        <tr><td>Pauline Salgatar</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td><span class="shift-tag shift-night">🌙 Night</span></td><td>Richelle Lumanog</td></tr>
-        <tr><td>Jomari Profeta</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td><span class="shift-tag shift-night">🌙 Night</span></td><td>Richelle Lumanog</td></tr>
-        <tr><td>Alexander Delos Santos</td><td><span class="role-badge role-osr2">OSR II</span></td><td><span class="sf-pill sf-key">Key Support</span></td><td><span class="shift-tag shift-night">🌙 Night</span></td><td>Greg Diaz</td></tr>
-        <tr><td>Dante Llana Jr.</td><td><span class="role-badge role-osr2">OSR II</span></td><td><span class="sf-pill sf-key">Key Support</span></td><td><span class="shift-tag shift-night">🌙 Night</span></td><td>Richelle Lumanog</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- CURRENT SCHEDULES -->
-<div id="tab-current" class="section">
-  <div class="section-title">Current Schedules</div>
-  <div class="section-subtitle">Original schedules for all OSR and OSR II reps before any changes.</div>
-
-  <div class="table-wrap">
-    <table class="schedule-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Role</th>
-          <th>PHT Schedule</th>
-          <th>PDT Schedule</th>
-          <th>PH Working Days</th>
-          <th>US Working Days</th>
-          <th>Reports To</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Dan Joseph Icasiam</td><td><span class="role-badge role-osr">OSR</span></td><td>5:00 PM – 1:00 AM</td><td>2:00 AM – 10:00 AM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>Greg Diaz</td></tr>
-        <tr><td>Dianne Reyes Non</td><td><span class="role-badge role-osr">OSR</span></td><td>3:00 PM – 11:00 PM</td><td>12:00 AM – 8:00 AM</td><td>M, Tu, W, Th, F</td><td>Su, M, Tu, W, Th</td><td>Greg Diaz</td></tr>
-        <tr><td>Jurenne Dominguez</td><td><span class="role-badge role-osr">OSR</span></td><td>4:00 PM – 12:00 AM</td><td>1:00 AM – 9:00 AM</td><td>M, Tu, W, Th, F</td><td>Su, M, Tu, W, Th</td><td>Greg Diaz</td></tr>
-        <tr><td>Kenneth Andrew Labao Maranan</td><td><span class="role-badge role-osr">OSR</span></td><td>10:00 PM – 6:00 AM</td><td>7:00 AM – 3:00 PM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Greg Diaz</td></tr>
-        <tr><td>Neil Bernoulli Velasco</td><td><span class="role-badge role-osr">OSR</span></td><td>9:00 PM – 5:00 AM</td><td>6:00 AM – 2:00 PM</td><td>M, Tu, W, Th, F</td><td>Su, M, Tu, W, Th</td><td>Greg Diaz</td></tr>
-        <tr><td>Nomar Villamer</td><td><span class="role-badge role-osr">OSR</span></td><td>4:00 PM – 12:00 AM</td><td>1:00 AM – 9:00 AM</td><td>M, Tu, W, Th, F</td><td>Su, M, Tu, W, Th</td><td>Greg Diaz</td></tr>
-        <tr><td>Nicole Macasaet</td><td><span class="role-badge role-osr">OSR</span></td><td>9:00 PM – 5:00 AM</td><td>6:00 AM – 2:00 PM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>Greg Diaz</td></tr>
-        <tr><td>John Philip (JP) Gianan</td><td><span class="role-badge role-osr">OSR</span></td><td>10:00 PM – 6:00 AM</td><td>7:00 AM – 3:00 PM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Greg Diaz</td></tr>
-        <tr><td>Judiel Cruz</td><td><span class="role-badge role-osr">OSR</span></td><td>10:00 PM – 6:00 AM</td><td>7:00 AM – 3:00 PM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>Greg Diaz</td></tr>
-        <tr><td>Gretchen Sevillano</td><td><span class="role-badge role-osr">OSR</span></td><td>11:00 AM – 7:00 PM</td><td>8:00 PM – 4:00 AM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Richelle Lumanog</td></tr>
-        <tr><td>Joseph Solmayor</td><td><span class="role-badge role-osr">OSR</span></td><td>7:00 AM – 3:00 PM</td><td>4:00 PM – 12:00 AM</td><td>M, Tu, W, Th, F</td><td>Su, M, Tu, W, Th</td><td>Richelle Lumanog</td></tr>
-        <tr><td>Larry Mabuti Jr.</td><td><span class="role-badge role-osr">OSR</span></td><td>9:00 AM – 5:00 PM</td><td>6:00 PM – 2:00 AM</td><td>Sa, Su, M, Tu, W</td><td>F, Sa, Su, M, Tu</td><td>Richelle Lumanog</td></tr>
-        <tr><td>Pauline Salgatar</td><td><span class="role-badge role-osr">OSR</span></td><td>5:00 AM – 1:00 PM</td><td>2:00 PM – 10:00 PM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Richelle Lumanog</td></tr>
-        <tr><td>Jomari Profeta</td><td><span class="role-badge role-osr">OSR</span></td><td>7:00 AM – 3:00 PM</td><td>4:00 PM – 12:00 AM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Richelle Lumanog</td></tr>
-        <tr><td>Rae Palenzuela</td><td><span class="role-badge role-osr2">OSR II</span></td><td>3:00 PM – 11:00 PM</td><td>12:00 AM – 8:00 AM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Greg Diaz</td></tr>
-        <tr><td>Alexander Delos Santos</td><td><span class="role-badge role-osr2">OSR II</span></td><td>2:00 AM – 10:00 AM</td><td>11:00 AM – 7:00 PM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>Greg Diaz</td></tr>
-        <tr><td>Dante Llana Jr.</td><td><span class="role-badge role-osr2">OSR II</span></td><td>2:00 AM – 10:00 AM</td><td>11:00 AM – 7:00 PM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>Richelle Lumanog</td></tr>
-        <tr><td>Renn Ryan Rodriguez</td><td><span class="role-badge role-osr2">OSR II</span></td><td>12:00 AM – 8:00 AM</td><td>9:00 AM – 5:00 PM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Richelle Lumanog</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- NEW SCHEDULE -->
-<div id="tab-new-schedule" class="section">
-  <div class="section-title">New Schedule</div>
-  <div class="section-subtitle">Revised schedule optimized for 24/7 coverage with Special Force requirements met across all shifts.</div>
-
-  <!-- DAY TEAM -->
-  <div class="shift-section">
-    <div class="shift-header day">
-      <div class="shift-icon">🌞</div>
-      <div class="shift-info">
-        <h3>Day Team</h3>
-        <p>11:00 PM – 7:00 AM PHT &nbsp;·&nbsp; 8:00 AM – 4:00 PM PDT &nbsp;·&nbsp; Overlaps with US CSR daytime hours</p>
-      </div>
+  <!-- TL Handoff -->
+  <div class="tl-handoff">
+    <h3>TL Handoff Protocol</h3>
+    <div class="handoff-row">
+      <div class="handoff-time">06:00 PHT</div>
+      <div class="handoff-tls">Greg → Richelle</div>
+      <div class="handoff-desc">End of Block A → Start of Block B. Greg starts 15 mins early (05:45) for overlap. US morning handoff — highest priority escalations flagged.</div>
     </div>
-    <div class="table-wrap">
-      <table class="schedule-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Special Force</th>
-            <th>PHT Schedule</th>
-            <th>PDT Schedule</th>
-            <th>PH Working Days</th>
-            <th>US Working Days</th>
-            <th>Rest Days (PH)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Neil Bernoulli Velasco</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td>11:00 PM – 7:00 AM</td><td>8:00 AM – 4:00 PM</td><td>M, Tu, W, Th, F</td><td>Su, M, Tu, W, Th</td><td>Sa & Su</td></tr>
-          <tr><td>Kenneth Andrew Labao Maranan</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td>11:00 PM – 7:00 AM</td><td>8:00 AM – 4:00 PM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Su & M</td></tr>
-          <tr><td>Nicole Macasaet</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td>11:00 PM – 7:00 AM</td><td>8:00 AM – 4:00 PM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>F & Sa</td></tr>
-          <tr><td>John Philip (JP) Gianan</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td>11:00 PM – 7:00 AM</td><td>8:00 AM – 4:00 PM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Su & M</td></tr>
-          <tr><td>Judiel Cruz</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td>11:00 PM – 7:00 AM</td><td>8:00 AM – 4:00 PM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>F & Sa</td></tr>
-          <tr><td>Renn Ryan Rodriguez</td><td><span class="role-badge role-osr2">OSR II</span></td><td><span class="sf-pill sf-key">Key Support</span></td><td>11:00 PM – 7:00 AM</td><td>8:00 AM – 4:00 PM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Su & M</td></tr>
-        </tbody>
-      </table>
+    <div class="handoff-row">
+      <div class="handoff-time">14:00 PHT</div>
+      <div class="handoff-tls">Richelle → Jurenne</div>
+      <div class="handoff-desc">End of Block B → Start of Block C. Richelle stays until 14:15 for structured pass-off of open cases and queue status.</div>
+    </div>
+    <div class="handoff-row">
+      <div class="handoff-time">22:00 PHT</div>
+      <div class="handoff-tls">Jurenne → Greg</div>
+      <div class="handoff-desc">End of Block C → Start of Block A. Jurenne stays until 22:15. Greg comes in at 21:45 for context on any overnight critical items.</div>
     </div>
   </div>
+</section>
 
-  <!-- MID SHIFT -->
-  <div class="shift-section">
-    <div class="shift-header mid">
-      <div class="shift-icon">☀️</div>
-      <div class="shift-info">
-        <h3>Mid Shift</h3>
-        <p>3:00 PM – 11:00 PM PHT &nbsp;·&nbsp; 12:00 AM – 8:00 AM PDT &nbsp;·&nbsp; Lowest client activity window</p>
+<!-- ══════════════════════════════════════════════════════ GAPS ══ -->
+<section id="tab-gaps" class="section">
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#d97706"></div>
+    <div class="sec-head-title">Gap Analysis &amp; Recommendations</div>
+    <div class="sec-head-sub">Proposed schedule vs current</div>
+  </div>
+  <div class="gap-grid">
+    <div class="gap-card ok">
+      <div class="gap-card-title">Zero coverage gaps <span class="status-pill pill-ok">Resolved</span></div>
+      <div class="gap-body">The 3-block system eliminates all zero-coverage windows. Every hour of every day has at least 5–7 reps on shift — far better than the current 1-person Sunday gaps.</div>
+    </div>
+    <div class="gap-card ok">
+      <div class="gap-card-title">TL coverage upgraded <span class="status-pill pill-ok">Resolved</span></div>
+      <div class="gap-body">3 TLs replace the current 2. Each block has a dedicated TL with clean 15-min overlap handoffs at 06:00, 14:00, and 22:00 PHT. No more TLs covering hours at the fringe of their shift.</div>
+    </div>
+    <div class="gap-card ok">
+      <div class="gap-card-title">Special forces every block <span class="status-pill pill-ok">Covered</span></div>
+      <div class="gap-body">
+        <strong>Block A</strong> · Key Support ×2 (Xander, Dante) · Brokerage Change (Joseph, JP) · Agent Subdomains (Kenneth, Neil)<br><br>
+        <strong>Block B</strong> · Key Support (Renn) · Brokerage Change (Larry, Dianne) · Agent Subdomains (Dan, Pau) · SEO Cases (Gretchen)<br><br>
+        <strong>Block C</strong> · Key Support (Rae) · Brokerage Change (Nomar, Nam, Jel) · Agent Subdomains (Jomari)<br><br>
+        <strong>SEO Cases</strong> · Covered across all hours by Dona, Maybelle (03:00–11:00) and Gretchen (Block B). TLs handle SSPW in all blocks.
       </div>
     </div>
-    <div class="table-wrap">
-      <table class="schedule-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Special Force</th>
-            <th>PHT Schedule</th>
-            <th>PDT Schedule</th>
-            <th>PH Working Days</th>
-            <th>US Working Days</th>
-            <th>Rest Days (PH)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Dan Joseph Icasiam</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td>3:00 PM – 11:00 PM</td><td>12:00 AM – 8:00 AM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>F & Sa</td></tr>
-          <tr><td>Dianne Reyes Non</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td>3:00 PM – 11:00 PM</td><td>12:00 AM – 8:00 AM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>F & Sa</td></tr>
-          <tr><td>Jurenne Dominguez</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td>3:00 PM – 11:00 PM</td><td>12:00 AM – 8:00 AM</td><td>F, M, Tu, W, Th</td><td>Th, Su, M, Tu, W</td><td>Sa & Su</td></tr>
-          <tr><td>Nomar Villamer</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td>3:00 PM – 11:00 PM</td><td>12:00 AM – 8:00 AM</td><td>M, Tu, W, Th, Sa</td><td>Su, M, Tu, W, F</td><td>F & Su</td></tr>
-          <tr><td>Gretchen Sevillano</td><td><span class="role-badge role-osr">OSR</span></td><td>—</td><td>3:00 PM – 11:00 PM</td><td>12:00 AM – 8:00 AM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Su & M</td></tr>
-          <tr><td>Rae Palenzuela</td><td><span class="role-badge role-osr2">OSR II</span></td><td><span class="sf-pill sf-key">Key Support</span></td><td>3:00 PM – 11:00 PM</td><td>12:00 AM – 8:00 AM</td><td>M, Tu, W, Th, F</td><td>Su, M, Tu, W, Th</td><td>Sa & Su</td></tr>
-        </tbody>
-      </table>
+    <div class="gap-card info">
+      <div class="gap-card-title">3rd TL: Promote Jurenne <span class="status-pill pill-info">Recommendation</span></div>
+      <div class="gap-body">Jurenne is the promoted TL for Block C — already a senior OSR I specialist in Brokerage Change with strong operational knowledge. Her Brokerage Change queue coverage in Block C is backfilled by training Nomar. Renn remains OSR II Key Support in Block C.</div>
+    </div>
+    <div class="gap-card ok">
+      <div class="gap-card-title">SSPW ownership clarified <span class="status-pill pill-ok">Resolved</span></div>
+      <div class="gap-body">SSPW is no longer a rep-level queue. All 3 TLs (Greg, Richelle, Jurenne) own SSPW for their respective blocks. This simplifies the queue structure and keeps escalations at the TL level.</div>
+    </div>
+    <div class="gap-card info">
+      <div class="gap-card-title">Block C SF coverage <span class="status-pill pill-info">Note</span></div>
+      <div class="gap-body">
+        Block C has strong Brokerage Change coverage (Nomar, Nam, Jel) and Key Support (Rae).<br><br>
+        · <strong>Jomari</strong> → Agent Subdomains (already assigned)<br>
+        · No SEO Cases rep in Block C — Gretchen (Block B) and Dona/Maybelle cover the adjacent hours as natural overlap.
+      </div>
+    </div>
+    <div class="gap-card info">
+      <div class="gap-card-title">SEO Cases coverage <span class="status-pill pill-info">Note</span></div>
+      <div class="gap-body">SEO Cases is covered by Dona &amp; Maybelle (03:00–11:00, no rotation) and Gretchen in Block B (06:00–14:00). This gives SEO coverage across roughly 00:00–14:00 PHT. Block A and C do not have a dedicated SEO rep — flag if more SEO coverage is needed overnight.</div>
+    </div>
+    <div class="gap-card warn">
+      <div class="gap-card-title">Dona &amp; Maybelle straddle blocks <span class="status-pill pill-warn">Note</span></div>
+      <div class="gap-body">Their 03:00–11:00 shift spans Block A and Block B. They remain as permanent exceptions with no rotation. They serve as a natural bridge between the two overnight/morning blocks and provide SEO Cases coverage during the transition window.</div>
+    </div>
+    <div class="gap-card ok">
+      <div class="gap-card-title">Graveyard fairness solved <span class="status-pill pill-ok">By design</span></div>
+      <div class="gap-body">No rep spends more than 4 months per year on the 22:00–06:00 graveyard shift. The rotation ensures each group cycles through all 3 blocks — including the TLs.</div>
     </div>
   </div>
+</section>
 
-  <!-- NIGHT TEAM -->
-  <div class="shift-section">
-    <div class="shift-header night">
-      <div class="shift-icon">🌙</div>
-      <div class="shift-info">
-        <h3>Night Team</h3>
-        <p>7:00 AM – 3:00 PM PHT &nbsp;·&nbsp; 4:00 PM – 12:00 AM PDT &nbsp;·&nbsp; US afternoon/evening coverage</p>
-      </div>
-    </div>
-    <div class="table-wrap">
-      <table class="schedule-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Special Force</th>
-            <th>PHT Schedule</th>
-            <th>PDT Schedule</th>
-            <th>PH Working Days</th>
-            <th>US Working Days</th>
-            <th>Rest Days (PH)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Joseph Solmayor</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td>7:00 AM – 3:00 PM</td><td>4:00 PM – 12:00 AM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>F & Sa</td></tr>
-          <tr><td>Larry Mabuti Jr.</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-brokerage">Brokerage Change</span></td><td>7:00 AM – 3:00 PM</td><td>4:00 PM – 12:00 AM</td><td>Sa, M, Tu, W, Th</td><td>F, Su, M, Tu, W</td><td>F & Su</td></tr>
-          <tr><td>Pauline Salgatar</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td>7:00 AM – 3:00 PM</td><td>4:00 PM – 12:00 AM</td><td>Su, W, Th, F, Sa</td><td>Sa, Tu, W, Th, F</td><td>M & Tu</td></tr>
-          <tr><td>Jomari Profeta</td><td><span class="role-badge role-osr">OSR</span></td><td><span class="sf-pill sf-agent">Agent Subdomain</span></td><td>7:00 AM – 3:00 PM</td><td>4:00 PM – 12:00 AM</td><td>Tu, W, Th, F, Sa</td><td>M, Tu, W, Th, F</td><td>Su & M</td></tr>
-          <tr><td>Alexander Delos Santos</td><td><span class="role-badge role-osr2">OSR II</span></td><td><span class="sf-pill sf-key">Key Support</span></td><td>7:00 AM – 3:00 PM</td><td>4:00 PM – 12:00 AM</td><td>Su, M, Tu, W, Th</td><td>Sa, Su, M, Tu, W</td><td>F & Sa</td></tr>
-          <tr><td>Dante Llana Jr.</td><td><span class="role-badge role-osr2">OSR II</span></td><td><span class="sf-pill sf-key">Key Support</span></td><td>7:00 AM – 3:00 PM</td><td>4:00 PM – 12:00 AM</td><td>M, Tu, W, Th, F</td><td>Su, M, Tu, W, Th</td><td>Sa & Su</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+</main>
 
-<!-- COVERAGE ANALYSIS -->
-<div id="tab-coverage" class="section">
-  <div class="section-title">Coverage Analysis</div>
-  <div class="section-subtitle">Daily Special Force coverage breakdown per shift. All times in PHT.</div>
-
-  <div class="shift-section">
-    <div class="shift-header day">
-      <div class="shift-icon">🌞</div>
-      <div class="shift-info"><h3>Day Team — 11:00 PM – 7:00 AM PHT</h3></div>
-    </div>
-    <div class="table-wrap">
-      <table class="coverage-table">
-        <thead>
-          <tr><th>Day (PHT)</th><th>US Time (PDT)</th><th>🔑 Key Support</th><th>🌐 Agent Subdomain</th><th>🏢 Brokerage Change</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Sunday 11PM–7AM</td><td>Sun 8AM–4PM</td><td><span class="check">✅ Renn</span></td><td><span class="check">✅ Kenneth, Judiel</span></td><td><span class="check">✅ John Philip</span></td></tr>
-          <tr><td>Monday 11PM–7AM</td><td>Mon 8AM–4PM</td><td><span class="check">✅ Renn</span></td><td><span class="check">✅ Neil, Judiel</span></td><td><span class="check">✅ Nicole</span></td></tr>
-          <tr><td>Tuesday 11PM–7AM</td><td>Tue 8AM–4PM</td><td><span class="check">✅ Renn</span></td><td><span class="check">✅ Neil, Kenneth, Judiel</span></td><td><span class="check">✅ John Philip, Nicole</span></td></tr>
-          <tr><td>Wednesday 11PM–7AM</td><td>Wed 8AM–4PM</td><td><span class="check">✅ Renn</span></td><td><span class="check">✅ Neil, Kenneth, Judiel</span></td><td><span class="check">✅ John Philip, Nicole</span></td></tr>
-          <tr><td>Thursday 11PM–7AM</td><td>Thu 8AM–4PM</td><td><span class="check">✅ Renn</span></td><td><span class="check">✅ Neil, Kenneth, Judiel</span></td><td><span class="check">✅ John Philip, Nicole</span></td></tr>
-          <tr><td>Friday 11PM–7AM</td><td>Fri 8AM–4PM</td><td><span class="check">✅ Renn</span></td><td><span class="check">✅ Neil, Kenneth</span></td><td><span class="check">✅ John Philip</span></td></tr>
-          <tr><td>Saturday 11PM–7AM</td><td>Sat 8AM–4PM</td><td><span class="check">✅ Renn</span></td><td><span class="check">✅ Kenneth</span></td><td><span class="check">✅ John Philip</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="shift-section">
-    <div class="shift-header mid">
-      <div class="shift-icon">☀️</div>
-      <div class="shift-info"><h3>Mid Shift — 3:00 PM – 11:00 PM PHT</h3></div>
-    </div>
-    <div class="table-wrap">
-      <table class="coverage-table">
-        <thead>
-          <tr><th>Day (PHT)</th><th>US Time (PDT)</th><th>🔑 Key Support</th><th>🌐 Agent Subdomain</th><th>🏢 Brokerage Change</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Sunday 3PM–11PM</td><td>Sat 12AM–8AM</td><td><span class="low">— (Low Risk)</span></td><td><span class="check">✅ Dan</span></td><td><span class="check">✅ Dianne, Nomar</span></td></tr>
-          <tr><td>Monday 3PM–11PM</td><td>Sun 12AM–8AM</td><td><span class="check">✅ Rae</span></td><td><span class="check">✅ Dan</span></td><td><span class="check">✅ Dianne, Jurenne</span></td></tr>
-          <tr><td>Tuesday 3PM–11PM</td><td>Mon 12AM–8AM</td><td><span class="check">✅ Rae</span></td><td><span class="check">✅ Dan</span></td><td><span class="check">✅ Dianne, Jurenne, Nomar</span></td></tr>
-          <tr><td>Wednesday 3PM–11PM</td><td>Tue 12AM–8AM</td><td><span class="check">✅ Rae</span></td><td><span class="check">✅ Dan</span></td><td><span class="check">✅ Dianne, Jurenne, Nomar</span></td></tr>
-          <tr><td>Thursday 3PM–11PM</td><td>Wed 12AM–8AM</td><td><span class="check">✅ Rae</span></td><td><span class="check">✅ Dan</span></td><td><span class="check">✅ Dianne, Jurenne, Nomar</span></td></tr>
-          <tr><td>Friday 3PM–11PM</td><td>Thu 12AM–8AM</td><td><span class="check">✅ Rae</span></td><td><span class="check">✅ Dan</span></td><td><span class="check">✅ Dianne</span></td></tr>
-          <tr><td>Saturday 3PM–11PM</td><td>Fri 12AM–8AM</td><td><span class="low">— (Low Risk)</span></td><td><span class="low">— (Low Risk)</span></td><td><span class="check">✅ Jurenne, Nomar, Gretchen</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="shift-section">
-    <div class="shift-header night">
-      <div class="shift-icon">🌙</div>
-      <div class="shift-info"><h3>Night Team — 7:00 AM – 3:00 PM PHT</h3></div>
-    </div>
-    <div class="table-wrap">
-      <table class="coverage-table">
-        <thead>
-          <tr><th>Day (PHT)</th><th>US Time (PDT)</th><th>🔑 Key Support</th><th>🌐 Agent Subdomain</th><th>🏢 Brokerage Change</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Sunday 7AM–3PM</td><td>Sat 4PM–12AM</td><td><span class="check">✅ Alexander</span></td><td><span class="check">✅ Pauline, Jomari</span></td><td><span class="check">✅ Larry</span></td></tr>
-          <tr><td>Monday 7AM–3PM</td><td>Sun 4PM–12AM</td><td><span class="check">✅ Alexander, Dante</span></td><td><span class="check">✅ Pauline</span></td><td><span class="check">✅ Joseph, Larry</span></td></tr>
-          <tr><td>Tuesday 7AM–3PM</td><td>Mon 4PM–12AM</td><td><span class="check">✅ Alexander, Dante</span></td><td><span class="check">✅ Pauline, Jomari</span></td><td><span class="check">✅ Joseph, Larry</span></td></tr>
-          <tr><td>Wednesday 7AM–3PM</td><td>Tue 4PM–12AM</td><td><span class="check">✅ Alexander, Dante</span></td><td><span class="check">✅ Pauline, Jomari</span></td><td><span class="check">✅ Joseph, Larry</span></td></tr>
-          <tr><td>Thursday 7AM–3PM</td><td>Wed 4PM–12AM</td><td><span class="check">✅ Alexander, Dante</span></td><td><span class="check">✅ Pauline, Jomari</span></td><td><span class="check">✅ Joseph, Larry</span></td></tr>
-          <tr><td>Friday 7AM–3PM</td><td>Thu 4PM–12AM</td><td><span class="check">✅ Dante</span></td><td><span class="check">✅ Pauline, Jomari</span></td><td><span class="check">✅ Joseph</span></td></tr>
-          <tr><td>Saturday 7AM–3PM</td><td>Fri 4PM–12AM</td><td><span class="low">— (Low Risk)</span></td><td><span class="check">✅ Pauline, Jomari</span></td><td><span class="check">✅ Larry</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="section-title" style="font-size:20px; margin-bottom:16px;">📅 Weekend Coverage Summary</div>
-  <div class="weekend-grid">
-    <div class="weekend-card">
-      <div class="weekend-card-header">🗓️ Saturday (PHT)</div>
-      <div class="weekend-shift-row">
-        <div class="weekend-shift-label">🌞 Day Team (11PM–7AM)</div>
-        <div class="weekend-names">
-          <span class="coverage-name">Kenneth</span>
-          <span class="coverage-name">John Philip</span>
-          <span class="coverage-name">Renn</span>
-        </div>
-      </div>
-      <div class="weekend-shift-row">
-        <div class="weekend-shift-label">☀️ Mid Shift (3PM–11PM)</div>
-        <div class="weekend-names">
-          <span class="coverage-name">Nomar</span>
-          <span class="coverage-name">Gretchen</span>
-        </div>
-      </div>
-      <div class="weekend-shift-row">
-        <div class="weekend-shift-label">🌙 Night Team (7AM–3PM)</div>
-        <div class="weekend-names">
-          <span class="coverage-name">Larry</span>
-          <span class="coverage-name">Pauline</span>
-          <span class="coverage-name">Jomari</span>
-        </div>
-      </div>
-    </div>
-    <div class="weekend-card">
-      <div class="weekend-card-header">🗓️ Sunday (PHT)</div>
-      <div class="weekend-shift-row">
-        <div class="weekend-shift-label">🌞 Day Team (11PM–7AM)</div>
-        <div class="weekend-names">
-          <span class="coverage-name">Nicole</span>
-          <span class="coverage-name">Judiel</span>
-        </div>
-      </div>
-      <div class="weekend-shift-row">
-        <div class="weekend-shift-label">☀️ Mid Shift (3PM–11PM)</div>
-        <div class="weekend-names">
-          <span class="coverage-name">Dan</span>
-          <span class="coverage-name">Dianne</span>
-        </div>
-      </div>
-      <div class="weekend-shift-row">
-        <div class="weekend-shift-label">🌙 Night Team (7AM–3PM)</div>
-        <div class="weekend-names">
-          <span class="coverage-name">Joseph</span>
-          <span class="coverage-name">Alexander</span>
-          <span class="coverage-name">Dante</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- CHANGES -->
-<div id="tab-changes" class="section">
-  <div class="section-title">Changes Made</div>
-  <div class="section-subtitle">Summary of all working day and schedule adjustments made to optimize 24/7 coverage.</div>
-
-  <div class="changes-grid">
-    <div class="change-card">
-      <div class="change-name">✏️ Nicole Macasaet <span class="new-tag">Updated</span></div>
-      <div class="change-row">
-        <div class="change-label">PH Days</div>
-        <div class="change-old">Sa, Su, M, Tu, W</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">Su, M, Tu, W, Th</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Needed Brokerage Change on Sunday/Monday US time</div>
-      </div>
-      <div class="change-rest">Rest days: <strong>F & Sa (consecutive ✅)</strong></div>
-    </div>
-
-    <div class="change-card">
-      <div class="change-name">✏️ Jurenne Dominguez <span class="new-tag">Updated</span></div>
-      <div class="change-row">
-        <div class="change-label">PH Days</div>
-        <div class="change-old">Sa, M, Tu, W, Th</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">F, M, Tu, W, Th</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Moved Sa to F for better weekday Brokerage coverage</div>
-      </div>
-      <div class="change-rest">Rest days: <strong>Sa & Su (consecutive ✅)</strong></div>
-    </div>
-
-    <div class="change-card">
-      <div class="change-name">✏️ Rae Palenzuela <span class="new-tag">Updated</span></div>
-      <div class="change-row">
-        <div class="change-label">PH Days</div>
-        <div class="change-old">Tu, W, Th, F, Sa</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">M, Tu, W, Th, F</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Needed Key Support on Friday PHT (Thu US peak hours)</div>
-      </div>
-      <div class="change-rest">Rest days: <strong>Sa & Su (consecutive ✅)</strong></div>
-    </div>
-
-    <div class="change-card">
-      <div class="change-name">✏️ Dante Llana Jr. <span class="new-tag">Updated</span></div>
-      <div class="change-row">
-        <div class="change-label">PH Days</div>
-        <div class="change-old">Su, M, Tu, W, Th</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">M, Tu, W, Th, F</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Needed Key Support on Friday PHT (Thu US peak hours)</div>
-      </div>
-      <div class="change-rest">Rest days: <strong>Sa & Su (consecutive ✅)</strong></div>
-    </div>
-
-    <div class="change-card">
-      <div class="change-name">✏️ Pauline Salgatar <span class="new-tag">Updated</span></div>
-      <div class="change-row">
-        <div class="change-label">PH Days</div>
-        <div class="change-old">Tu, W, Th, F, Sa</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">Su, W, Th, F, Sa</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Added Sunday for Agent Subdomain coverage on Sunday Night Team</div>
-      </div>
-      <div class="change-rest">Rest days: <strong>M & Tu (consecutive ✅)</strong></div>
-    </div>
-
-    <div class="change-card">
-      <div class="change-name">✏️ Dianne Reyes Non <span class="new-tag">Updated</span></div>
-      <div class="change-row">
-        <div class="change-label">PH Days</div>
-        <div class="change-old">M, Tu, W, Th, F</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">Su, M, Tu, W, Th</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Added Sunday for Brokerage Change coverage on Sunday Mid Shift</div>
-      </div>
-      <div class="change-rest">Rest days: <strong>F & Sa (consecutive ✅)</strong></div>
-    </div>
-
-    <div class="change-card">
-      <div class="change-name">🎓 John Philip (JP) Gianan <span class="new-tag">New SF</span></div>
-      <div class="change-row">
-        <div class="change-label">Special Force</div>
-        <div class="change-old">None</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">Brokerage Change</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Needed Brokerage Change on Day Team weekends</div>
-      </div>
-      <div class="change-rest">Requires: <strong>Training (no promotion needed ✅)</strong></div>
-    </div>
-
-    <div class="change-card">
-      <div class="change-name">🎓 Judiel Cruz <span class="new-tag">New SF</span></div>
-      <div class="change-row">
-        <div class="change-label">Special Force</div>
-        <div class="change-old">None</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">Agent Subdomain</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Needed Agent Subdomain on Sunday Day Team</div>
-      </div>
-      <div class="change-rest">Requires: <strong>Training (no promotion needed ✅)</strong></div>
-    </div>
-
-    <div class="change-card">
-      <div class="change-name">🎓 Pauline Salgatar <span class="new-tag">New SF</span></div>
-      <div class="change-row">
-        <div class="change-label">Special Force</div>
-        <div class="change-old">None</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">Agent Subdomain</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Needed Agent Subdomain on Night Team</div>
-      </div>
-      <div class="change-rest">Requires: <strong>Training (no promotion needed ✅)</strong></div>
-    </div>
-
-    <div class="change-card">
-      <div class="change-name">🎓 Jomari Profeta <span class="new-tag">New SF</span></div>
-      <div class="change-row">
-        <div class="change-label">Special Force</div>
-        <div class="change-old">None</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">Agent Subdomain</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Needed Agent Subdomain on Night Team</div>
-      </div>
-      <div class="change-rest">Requires: <strong>Training (no promotion needed ✅)</strong></div>
-    </div>
-
-    <div class="change-card">
-      <div class="change-name">🔀 Renn Ryan Rodriguez <span class="new-tag">Moved</span></div>
-      <div class="change-row">
-        <div class="change-label">Shift</div>
-        <div class="change-old">Night Team</div>
-        <div class="change-arrow">→</div>
-        <div class="change-new">Day Team</div>
-      </div>
-      <div class="change-row">
-        <div class="change-label">Reason</div>
-        <div style="font-size:12px; color:var(--text-dim); text-align:right;">Needed Key Support on Day Team</div>
-      </div>
-      <div class="change-rest">Night Team still has <strong>Alexander & Dante for Key ✅</strong></div>
-    </div>
-  </div>
-</div>
-
-<!-- GAPS -->
-<div id="tab-gaps" class="section">
-  <div class="section-title">Gaps & Risks</div>
-  <div class="section-subtitle">Remaining coverage gaps after all optimizations. All gaps fall in low-risk windows.</div>
-
-  <div class="gaps-grid">
-    <div class="gap-card low">
-      <div class="gap-risk low">🟢 Low Risk</div>
-      <div class="gap-title">No Key & Agent Subdomain — Mid Shift</div>
-      <div class="gap-detail">
-        <strong>PHT:</strong> Saturday 3:00 PM – 11:00 PM<br>
-        <strong>US Time:</strong> Friday 12:00 AM – 8:00 AM PDT<br>
-        <strong>Why low risk:</strong> US clients are asleep during this window. Only Gretchen, Jurenne, and Nomar (Brokerage Change) are present.
-      </div>
-    </div>
-    <div class="gap-card low">
-      <div class="gap-risk low">🟢 Low Risk</div>
-      <div class="gap-title">No Key Support — Night Team</div>
-      <div class="gap-detail">
-        <strong>PHT:</strong> Saturday 7:00 AM – 3:00 PM<br>
-        <strong>US Time:</strong> Friday 4:00 PM – 12:00 AM PDT<br>
-        <strong>Why low risk:</strong> Friday evening US — lower ticket volume heading into the weekend. Agent Subdomain (Pauline, Jomari) and Brokerage Change (Larry) still covered.
-      </div>
-    </div>
-    <div class="gap-card low">
-      <div class="gap-risk low">🟢 Low Risk</div>
-      <div class="gap-title">No Key Support — Mid Shift Sunday</div>
-      <div class="gap-detail">
-        <strong>PHT:</strong> Sunday 3:00 PM – 11:00 PM<br>
-        <strong>US Time:</strong> Saturday 12:00 AM – 8:00 AM PDT<br>
-        <strong>Why low risk:</strong> Saturday overnight US — absolute lowest client activity window of the week. Dan (Agent Subdomain) and Dianne (Brokerage Change) still present.
-      </div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="section-title" style="font-size:20px; margin-bottom:8px;">✅ What Was Fixed</div>
-  <div class="section-subtitle">Previously critical gaps that have been resolved in the new schedule.</div>
-
-  <div class="table-wrap">
-    <table class="schedule-table">
-      <thead>
-        <tr>
-          <th>Gap</th>
-          <th>Shift</th>
-          <th>PHT Window</th>
-          <th>US Time</th>
-          <th>How Fixed</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>No Key Support</td><td>🌙 Night Team</td><td>F 7AM–3PM PHT</td><td>Thu 4PM–12AM PDT</td><td>Dante moved to M–F PHT ✅</td></tr>
-        <tr><td>No Key Support</td><td>☀️ Mid Shift</td><td>F 3PM–11PM PHT</td><td>Thu 12AM–8AM PDT</td><td>Rae moved to M–F PHT ✅</td></tr>
-        <tr><td>No Key Support</td><td>🌞 Day Team</td><td>Daily</td><td>Daily</td><td>Renn moved from Night to Day Team ✅</td></tr>
-        <tr><td>No Brokerage Change</td><td>🌞 Day Team</td><td>Su/M PHT</td><td>Sun/Mon US</td><td>Nicole moved to Su–Th PHT ✅</td></tr>
-        <tr><td>Thin Sunday coverage</td><td>All Shifts</td><td>Sunday PHT</td><td>Sunday US</td><td>Rescheduled multiple reps to include Sunday ✅</td></tr>
-        <tr><td>No Agent Subdomain</td><td>🌙 Night Team</td><td>Daily</td><td>Daily</td><td>Pauline & Jomari trained for Agent Subdomain ✅</td></tr>
-        <tr><td>No Brokerage Change</td><td>🌞 Day Team</td><td>Weekend</td><td>Weekend</td><td>John Philip trained for Brokerage Change ✅</td></tr>
-        <tr><td>No Agent Subdomain</td><td>🌞 Day Team</td><td>Su PHT</td><td>Sun US</td><td>Judiel trained for Agent Subdomain ✅</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<div class="tooltip" id="tooltip"></div>
 
 <script>
-  function showTab(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + id).classList.add('active');
-    event.target.classList.add('active');
-  }
-</script>
+// ──────────────────────────────────────────────────────────────────────────────
+// DATA
+// ──────────────────────────────────────────────────────────────────────────────
 
+const DAYS  = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DATES = ['May 11','May 12','May 13','May 14','May 15','May 16','May 17'];
+
+// ── CURRENT shifts: [name, role, startDay, startHour, endDay, endHour]
+const CURRENT_SHIFTS = [
+  ['Dan','osr1',6,17,0,1],['Nam','osr1',6,21,0,5],['Jel','osr1',6,22,0,6],
+  ['Dante','osr2',0,1,0,9],['Joseph','osr1',0,7,0,15],['Renn','osr2',0,7,0,15],
+  ['Richelle','tl',0,8,0,16],['Larry','osr1',0,9,0,17],['Dianne','osr1',0,15,0,23],
+  ['Nomar','osr1',0,16,1,0],['Jurenne','osr1',0,16,1,0],['Dan','osr1',0,17,1,1],
+  ['Neil','osr1',0,21,1,5],['Nam','osr1',0,21,1,5],['Jel','osr1',0,22,1,6],
+  ['Dante','osr2',1,1,1,9],['Xander','osr2',1,2,1,10],['Dona','osr1',1,3,1,11],
+  ['Maybelle','osr1',1,3,1,11],['Pau','osr1',1,5,1,13],['Joseph','osr1',1,7,1,15],
+  ['Renn','osr2',1,7,1,15],['Jomari','osr1',1,7,1,15],['Richelle','tl',1,8,1,16],
+  ['Larry','osr1',1,9,1,17],['Gretchen','osr1',1,11,1,19],['Rae','osr2',1,15,1,23],
+  ['Dianne','osr1',1,15,1,23],['Nomar','osr1',1,16,2,0],['Jurenne','osr1',1,16,2,0],
+  ['Dan','osr1',1,17,2,1],['Neil','osr1',1,21,2,5],['Nam','osr1',1,21,2,5],
+  ['JP','osr1',1,22,2,6],['Greg','mgr',1,22,2,6],['Jel','osr1',1,22,2,6],
+  ['Kenneth','osr1',1,22,2,6],['Dante','osr2',2,1,2,9],['Xander','osr2',2,2,2,10],
+  ['Dona','osr1',2,3,2,11],['Maybelle','osr1',2,3,2,11],['Pau','osr1',2,5,2,13],
+  ['Joseph','osr1',2,7,2,15],['Renn','osr2',2,7,2,15],['Jomari','osr1',2,7,2,15],
+  ['Richelle','tl',2,8,2,16],['Gretchen','osr1',2,11,2,19],['Rae','osr2',2,15,2,23],
+  ['Dianne','osr1',2,15,2,23],['Nomar','osr1',2,16,3,0],['Jurenne','osr1',2,16,3,0],
+  ['Dan','osr1',2,17,3,1],['Neil','osr1',2,21,3,5],['Nam','osr1',2,21,3,5],
+  ['JP','osr1',2,22,3,6],['Greg','mgr',2,22,3,6],['Jel','osr1',2,22,3,6],
+  ['Kenneth','osr1',2,22,3,6],['Dante','osr2',3,1,3,9],['Xander','osr2',3,2,3,10],
+  ['Dona','osr1',3,3,3,11],['Maybelle','osr1',3,3,3,11],['Pau','osr1',3,5,3,13],
+  ['Joseph','osr1',3,7,3,15],['Renn','osr2',3,7,3,15],['Jomari','osr1',3,7,3,15],
+  ['Richelle','tl',3,8,3,16],['Gretchen','osr1',3,11,3,19],['Rae','osr2',3,15,3,23],
+  ['Dianne','osr1',3,15,3,23],['Nomar','osr1',3,16,4,0],['Jurenne','osr1',3,16,4,0],
+  ['Dan','osr1',3,17,4,1],['Neil','osr1',3,21,4,5],['Nam','osr1',3,21,4,5],
+  ['JP','osr1',3,22,4,6],['Greg','mgr',3,22,4,6],['Jel','osr1',3,22,4,6],
+  ['Kenneth','osr1',3,22,4,6],['Xander','osr2',4,2,4,10],['Dona','osr1',4,3,4,11],
+  ['Maybelle','osr1',4,3,4,11],['Pau','osr1',4,5,4,13],['Joseph','osr1',4,7,4,15],
+  ['Renn','osr2',4,7,4,15],['Jomari','osr1',4,7,4,15],['Richelle','tl',4,8,4,16],
+  ['Larry','osr1',4,9,4,17],['Gretchen','osr1',4,11,4,19],['Rae','osr2',4,15,4,23],
+  ['Dianne','osr1',4,15,4,23],['Nomar','osr1',4,16,5,0],['Jurenne','osr1',4,16,5,0],
+  ['Dan','osr1',4,17,5,1],['Neil','osr1',4,21,5,5],['JP','osr1',4,22,5,6],
+  ['Greg','mgr',4,22,5,6],['Jel','osr1',4,22,5,6],['Kenneth','osr1',4,22,5,6],
+  ['Nomar','osr1',5,0,5,8],['Xander','osr2',5,2,5,10],['Dona','osr1',5,3,5,11],
+  ['Maybelle','osr1',5,3,5,11],['Pau','osr1',5,5,5,13],['Jomari','osr1',5,7,5,15],
+  ['Larry','osr1',5,9,5,17],['Gretchen','osr1',5,11,5,19],['Rae','osr2',5,15,5,23],
+  ['Kenneth','osr1',5,19,6,3],['JP','osr1',5,22,6,6],['Greg','mgr',5,22,6,6],
+  ['Dante','osr2',6,1,6,9],['Larry','osr1',6,9,6,17],['Dan','osr1',6,17,7,1],
+  ['Nam','osr1',6,21,7,5],['Jel','osr1',6,22,7,6],
+];
+
+// ── PROPOSED shifts: Block A=22-06, Block B=06-14, Block C=14-22
+// All 7 days, same shift every day for each rep
+// Block A: Greg(TL), Joseph, Jurenne, Xander, Kenneth, Neil, JP
+// Block B: Richelle(TL), Larry, Dianne, Dante, Dan, Gretchen, Pau
+// Block C: Renn(TL), Rae, Nomar, Jomari, Jel, Nam
+// Exceptions: Dona, Maybelle 03:00-11:00
+
+const PROPOSED_SHIFTS = [];
+
+// Block A: 22:00–06:00 | 2 Key Support: Xander + Dante
+['Greg','Joseph','Xander','Dante','Kenneth','Neil','JP'].forEach(name => {
+  for(let d=0;d<7;d++){
+    PROPOSED_SHIFTS.push([name,'A',d,22,d,24]);
+    const next=(d+1)%7;
+    PROPOSED_SHIFTS.push([name,'A',next,0,next,6]);
+  }
+});
+// Block B reps — 06:00–14:00 all 7 days | Key Support: Renn
+['Richelle','Larry','Dianne','Renn','Dan','Gretchen','Pau'].forEach(name => {
+  for(let d=0;d<7;d++) PROPOSED_SHIFTS.push([name,'B',d,6,d,14]);
+});
+// Block C reps — 14:00–22:00 all 7 days | Key Support: Rae
+['Jurenne','Rae','Nomar','Jomari','Jel','Nam'].forEach(name => {
+  for(let d=0;d<7;d++) PROPOSED_SHIFTS.push([name,'C',d,14,d,22]);
+});
+// Exceptions — Dona & Maybelle 03:00–11:00 all 7 days (no rotation)
+['Dona','Maybelle'].forEach(name => {
+  for(let d=0;d<7;d++) PROPOSED_SHIFTS.push([name,'EX',d,3,d,11]);
+});
+
+// ── BUILD COVERAGE MAPS ──────────────────────────────────────────────────────
+function buildCoverage(shifts) {
+  const cov = Array.from({length:7},()=>Array.from({length:24},()=>[]));
+  shifts.forEach(([name,,sd,sh,ed,eh]) => {
+    let d=sd,h=sh;
+    while(d<ed||(d===ed&&h<eh)){
+      if(d>=0&&d<7) cov[d][h].push(name);
+      h++; if(h>=24){h=0;d++;}
+    }
+  });
+  return cov;
+}
+
+function buildCoverageWithBlock(shifts) {
+  const cov = Array.from({length:7},()=>Array.from({length:24},()=>[]));
+  shifts.forEach(([name,block,sd,sh,ed,eh]) => {
+    // Normalize endHour=24 to day boundary
+    let d=sd, h=sh;
+    const endD = eh===24 ? ed : ed;
+    const endH = eh===24 ? 24 : eh;
+    while(d < endD || (d===endD && h < endH)){
+      if(d>=0 && d<7 && h<24) cov[d][h].push({name,block});
+      h++;
+      if(h>=24){h=0;d++;}
+    }
+  });
+  return cov;
+}
+
+const currentCov  = buildCoverage(CURRENT_SHIFTS);
+const proposedCov = buildCoverageWithBlock(PROPOSED_SHIFTS);
+
+// ── TOOLTIP ──────────────────────────────────────────────────────────────────
+const tip = document.getElementById('tooltip');
+function showTip(ev, html) {
+  tip.style.display='block';
+  tip.style.left=(ev.clientX+16)+'px';
+  tip.style.top=(ev.clientY-8)+'px';
+  tip.innerHTML=html;
+}
+function hideTip(){ tip.style.display='none'; }
+
+// ── COLOR HELPERS ────────────────────────────────────────────────────────────
+function hmColor(v){
+  if(v===0) return{bg:'#2d0a0a',text:'#ef4444'};
+  if(v===1) return{bg:'#3b1515',text:'#fca5a5'};
+  if(v<=3)  return{bg:'#2a1e00',text:'#fcd34d'};
+  if(v<=5)  return{bg:'#0f2d14',text:'#86efac'};
+  if(v<=7)  return{bg:'#063820',text:'#34d399'};
+  if(v<=9)  return{bg:'#044525',text:'#10b981'};
+  return    {bg:'#023018',text:'#059669'};
+}
+
+function blockColor(block){
+  return {A:'blockA',B:'blockB',C:'blockC',EX:'blockB'}[block]||'empty';
+}
+
+// ── BUILD CURRENT NAMED SCHEDULE ─────────────────────────────────────────────
+function buildCurrentSchedule(){
+  const grid = document.getElementById('currentScheduleGrid');
+
+  // Corner
+  const corner = document.createElement('div');
+  corner.className = 'cs-corner'; corner.textContent = 'PHT';
+  grid.appendChild(corner);
+
+  // Day headers
+  DAYS.forEach((d,i) => {
+    const hdr = document.createElement('div'); hdr.className = 'cs-day-hdr';
+    hdr.innerHTML = `<div class="cs-dow">${d}</div><div class="cs-date">${DATES[i]}</div>`;
+    grid.appendChild(hdr);
+  });
+
+  // For each hour row
+  for (let hr = 0; hr < 24; hr++) {
+    const tl = document.createElement('div'); tl.className = 'cs-time';
+    tl.textContent = `${hr.toString().padStart(2,'0')}:00`;
+    grid.appendChild(tl);
+
+    for (let di = 0; di < 7; di++) {
+      const cell = document.createElement('div'); cell.className = 'cs-cell';
+
+      // Find shifts that START at this hour on this day
+      CURRENT_SHIFTS.forEach(([name, role, sd, sh, ed, eh]) => {
+        if (sd === di && sh === hr) {
+          const chip = document.createElement('span');
+          chip.className = `cs-chip ${role}`;
+          const endStr = `${eh.toString().padStart(2,'0')}:00`;
+          chip.textContent = name;
+          chip.title = `${name} · ${role.toUpperCase()} · ${hr.toString().padStart(2,'0')}:00–${endStr}`;
+          cell.appendChild(chip);
+        }
+      });
+
+      grid.appendChild(cell);
+    }
+  }
+}
+
+// ── BUILD CURRENT HEATMAP ────────────────────────────────────────────────────
+function buildCurrentHeatmap(){
+  const grid=document.getElementById('currentHeatmap');
+  const corner=document.createElement('div');
+  corner.className='hm-tl'; corner.textContent='PHT'; grid.appendChild(corner);
+  DAYS.forEach((d,i)=>{
+    const h=document.createElement('div'); h.className='hm-th';
+    h.innerHTML=`${d}<span class="hm-th-date">${DATES[i]}</span>`; grid.appendChild(h);
+  });
+  for(let hr=0;hr<24;hr++){
+    const tl=document.createElement('div'); tl.className='hm-tl';
+    tl.textContent=`${hr.toString().padStart(2,'0')}:00`; grid.appendChild(tl);
+    for(let di=0;di<7;di++){
+      const people=currentCov[di][hr]; const count=people.length;
+      const c=hmColor(count);
+      const cell=document.createElement('div'); cell.className='hm-cell';
+      cell.style.cssText=`background:${c.bg};color:${c.text}`;
+      cell.textContent=count;
+      const uniq=[...new Set(people)].join(', ')||'Nobody';
+      const flag=count===0?'<div class="tt-flag">🔴 No coverage</div>':count===1?'<div class="tt-flag">⚠️ Thin</div>':'';
+      cell.addEventListener('mousemove',ev=>showTip(ev,`<div class="tt-title">${DAYS[di]} ${hr.toString().padStart(2,'0')}:00</div><div class="tt-names">${uniq}</div>${flag}`));
+      cell.addEventListener('mouseleave',hideTip);
+      grid.appendChild(cell);
+    }
+  }
+}
+
+// ── BUILD PROPOSED GRID (named blocks) ───────────────────────────────────────
+function buildProposedGrid(){
+  const grid=document.getElementById('proposedGrid');
+  const corner=document.createElement('div'); corner.className='pg-tl';
+  corner.textContent='PHT'; grid.appendChild(corner);
+  DAYS.forEach((d,i)=>{
+    const h=document.createElement('div'); h.className='pg-th';
+    h.innerHTML=`${d}<span class="pg-th-date">${DATES[i]}</span>`; grid.appendChild(h);
+  });
+  for(let hr=0;hr<24;hr++){
+    const tl=document.createElement('div'); tl.className='pg-tl';
+    tl.textContent=`${hr.toString().padStart(2,'0')}:00`; grid.appendChild(tl);
+    for(let di=0;di<7;di++){
+      const entries=proposedCov[di][hr];
+      const cell=document.createElement('div'); cell.className='pg-cell';
+      if(entries.length===0){ cell.classList.add('empty'); cell.textContent='—'; }
+      else {
+        const blocks=[...new Set(entries.map(e=>e.block))];
+        const blk=blocks[0];
+        const cssClass = blk==='EX' ? 'blockB' : ('block'+blk);
+        cell.classList.add(cssClass);
+        const blockLabel = {A:'Block A', B:'Block B', C:'Block C', EX:'D+M'}[blk];
+        cell.textContent=`${entries.length} · ${blockLabel}`;
+        const names=[...new Set(entries.map(e=>e.name))].join(', ');
+        const blockFull = {A:'Block A  22:00–06:00',B:'Block B  06:00–14:00',C:'Block C  14:00–22:00',EX:'Dona & Maybelle  03:00–11:00'}[blk];
+        cell.addEventListener('mousemove',ev=>showTip(ev,`<div class="tt-title">${DAYS[di]} ${hr.toString().padStart(2,'0')}:00</div><div class="tt-block" style="color:${blk==='A'?'#c4b5fd':blk==='B'?'#7dd3fc':'#6ee7b7'}">${blockFull} · ${entries.length} reps</div><div class="tt-names">${names}</div>`));
+        cell.addEventListener('mouseleave',hideTip);
+      }
+      grid.appendChild(cell);
+    }
+  }
+}
+
+// ── BUILD PROPOSED HEATMAP ───────────────────────────────────────────────────
+function buildProposedHeatmap(){
+  const grid=document.getElementById('proposedHeatmap');
+  const corner=document.createElement('div'); corner.className='hm-tl';
+  corner.textContent='PHT'; grid.appendChild(corner);
+  DAYS.forEach((d,i)=>{
+    const h=document.createElement('div'); h.className='hm-th';
+    h.innerHTML=`${d}<span class="hm-th-date">${DATES[i]}</span>`; grid.appendChild(h);
+  });
+  for(let hr=0;hr<24;hr++){
+    const tl=document.createElement('div'); tl.className='hm-tl';
+    tl.textContent=`${hr.toString().padStart(2,'0')}:00`; grid.appendChild(tl);
+    for(let di=0;di<7;di++){
+      const entries=proposedCov[di][hr]; const count=entries.length;
+      const c=hmColor(count);
+      const cell=document.createElement('div'); cell.className='hm-cell';
+      cell.style.cssText=`background:${c.bg};color:${c.text}`; cell.textContent=count;
+      const names=[...new Set(entries.map(e=>e.name))].join(', ')||'Nobody';
+      cell.addEventListener('mousemove',ev=>showTip(ev,`<div class="tt-title">${DAYS[di]} ${hr.toString().padStart(2,'0')}:00 — ${count} reps</div><div class="tt-names">${names}</div>`));
+      cell.addEventListener('mouseleave',hideTip);
+      grid.appendChild(cell);
+    }
+  }
+}
+
+// ── BUILD TEAM CARDS ─────────────────────────────────────────────────────────
+const TEAM_DATA = {
+  A: [
+    {name:'Greg',    role:'TL / Manager', color:'#fb923c', sf:'mgr',     sfLabel:'Manager · SSPW'},
+    {name:'Joseph',  role:'OSR I',        color:'#38bdf8', sf:'brok',    sfLabel:'Brokerage Change'},
+    {name:'Xander',  role:'OSR II',       color:'#a78bfa', sf:'key',     sfLabel:'Key Support'},
+    {name:'Dante',   role:'OSR II',       color:'#a78bfa', sf:'key',     sfLabel:'Key Support'},
+    {name:'Kenneth', role:'OSR I',        color:'#38bdf8', sf:'agent',   sfLabel:'Agent Subdomains'},
+    {name:'Neil',    role:'OSR I',        color:'#38bdf8', sf:'agent',   sfLabel:'Agent Subdomains'},
+    {name:'JP',      role:'OSR I',        color:'#38bdf8', sf:'brok',    sfLabel:'Brokerage Change'},
+  ],
+  B: [
+    {name:'Richelle', role:'Team Lead',   color:'#fbbf24', sf:'tl',      sfLabel:'Team Lead · SSPW'},
+    {name:'Larry',    role:'OSR I',       color:'#38bdf8', sf:'brok',    sfLabel:'Brokerage Change'},
+    {name:'Dianne',   role:'OSR I',       color:'#38bdf8', sf:'brok',    sfLabel:'Brokerage Change'},
+    {name:'Renn',     role:'OSR II',      color:'#a78bfa', sf:'key',     sfLabel:'Key Support'},
+    {name:'Dan',      role:'OSR I',       color:'#38bdf8', sf:'agent',   sfLabel:'Agent Subdomains'},
+    {name:'Gretchen', role:'OSR I',       color:'#38bdf8', sf:'seo',     sfLabel:'SEO Cases'},
+    {name:'Pau',      role:'OSR I',       color:'#38bdf8', sf:'agent',   sfLabel:'Agent Subdomains'},
+  ],
+  C: [
+    {name:'Jurenne', role:'TL (promoted)', color:'#fbbf24', sf:'tl',     sfLabel:'Team Lead · SSPW · Brokerage Change'},
+    {name:'Rae',     role:'OSR II',        color:'#a78bfa', sf:'key',    sfLabel:'Key Support'},
+    {name:'Nomar',   role:'OSR I',         color:'#38bdf8', sf:'brok',   sfLabel:'Brokerage Change'},
+    {name:'Jomari',  role:'OSR I',         color:'#38bdf8', sf:'agent',  sfLabel:'Agent Subdomains'},
+    {name:'Jel',     role:'OSR I',         color:'#38bdf8', sf:'brok',   sfLabel:'Brokerage Change'},
+    {name:'Nam',     role:'OSR I',         color:'#38bdf8', sf:'brok',   sfLabel:'Brokerage Change'},
+  ],
+  EX: [
+    {name:'Dona',     role:'OSR I',       color:'#34d399', sf:'seo',     sfLabel:'SEO Cases'},
+    {name:'Maybelle', role:'OSR I',       color:'#34d399', sf:'seo',     sfLabel:'SEO Cases'},
+  ]
+};
+
+function sfClass(sf){ return 'sf-'+sf; }
+
+function buildTeam(){
+  Object.entries(TEAM_DATA).forEach(([block, members])=>{
+    const container=document.getElementById('team'+block);
+    members.forEach(m=>{
+      const initials=m.name.substring(0,2).toUpperCase();
+      const card=document.createElement('div'); card.className='person-card';
+      card.innerHTML=`
+        <div class="pc-top">
+          <div class="avatar" style="background:${m.color}1a;color:${m.color}">${initials}</div>
+          <div><div class="pc-name">${m.name}</div><div class="pc-role">${m.role}</div></div>
+        </div>
+        <div class="pc-body">
+          <strong>Block</strong> ${{A:'A · 22:00–06:00',B:'B · 06:00–14:00',C:'C · 14:00–22:00',EX:'Exception · 03:00–11:00'}[block]}<br>
+          <span class="sf-pill ${sfClass(m.sf)}">${m.sfLabel}</span>
+        </div>`;
+      container.appendChild(card);
+    });
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function switchTab(id, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+buildCurrentSchedule();
+buildCurrentHeatmap();
+buildProposedGrid();
+buildProposedHeatmap();
+buildTeam();
+</script>
 </body>
 </html>
