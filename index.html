@@ -894,7 +894,7 @@ function buildCurrentSchedule(){
   // Day headers
   DAYS.forEach((d,i) => {
     const hdr = document.createElement('div'); hdr.className = 'cs-day-hdr';
-    hdr.innerHTML = `<div class="cs-dow">${d}</div><div class="cs-date">${DATES[i]}</div>`;
+    hdr.innerHTML = `<div class="cs-dow">${d}</div>`;
     grid.appendChild(hdr);
   });
 
@@ -931,7 +931,7 @@ function buildCurrentHeatmap(){
   corner.className='hm-tl'; corner.textContent='PHT'; grid.appendChild(corner);
   DAYS.forEach((d,i)=>{
     const h=document.createElement('div'); h.className='hm-th';
-    h.innerHTML=`${d}<span class="hm-th-date">${DATES[i]}</span>`; grid.appendChild(h);
+    h.innerHTML=`${d}`; grid.appendChild(h);
   });
   for(let hr=0;hr<24;hr++){
     const tl=document.createElement('div'); tl.className='hm-tl';
@@ -958,7 +958,7 @@ function buildProposedGrid(){
   corner.textContent='PHT'; grid.appendChild(corner);
   DAYS.forEach((d,i)=>{
     const h=document.createElement('div'); h.className='pg-th';
-    h.innerHTML=`${d}<span class="pg-th-date">${DATES[i]}</span>`; grid.appendChild(h);
+    h.innerHTML=`${d}`; grid.appendChild(h);
   });
   for(let hr=0;hr<24;hr++){
     const tl=document.createElement('div'); tl.className='pg-tl';
@@ -991,7 +991,7 @@ function buildProposedHeatmap(){
   corner.textContent='PHT'; grid.appendChild(corner);
   DAYS.forEach((d,i)=>{
     const h=document.createElement('div'); h.className='hm-th';
-    h.innerHTML=`${d}<span class="hm-th-date">${DATES[i]}</span>`; grid.appendChild(h);
+    h.innerHTML=`${d}`; grid.appendChild(h);
   });
   for(let hr=0;hr<24;hr++){
     const tl=document.createElement('div'); tl.className='hm-tl';
@@ -1099,7 +1099,7 @@ function buildNewbiesSchedule(){
 
   DAYS.forEach((d,i) => {
     const hdr = document.createElement('div'); hdr.className = 'cs-day-hdr';
-    hdr.innerHTML = `<div class="cs-dow">${d}</div><div class="cs-date">${DATES[i]}</div>`;
+    hdr.innerHTML = `<div class="cs-dow">${d}</div>`;
     grid.appendChild(hdr);
   });
 
@@ -1145,7 +1145,7 @@ function buildNewbiesHeatmap(){
   corner.className='hm-tl'; corner.textContent='PHT'; grid.appendChild(corner);
   DAYS.forEach((d,i)=>{
     const h=document.createElement('div'); h.className='hm-th';
-    h.innerHTML=`${d}<span class="hm-th-date">${DATES[i]}</span>`; grid.appendChild(h);
+    h.innerHTML=`${d}`; grid.appendChild(h);
   });
   for(let hr=0;hr<24;hr++){
     const tl=document.createElement('div'); tl.className='hm-tl';
@@ -1253,7 +1253,7 @@ function buildTrainingSchedule(){
   grid.appendChild(corner);
   DAYS.forEach((d,i) => {
     const hdr = document.createElement('div'); hdr.className = 'cs-day-hdr';
-    hdr.innerHTML = `<div class="cs-dow">${d}</div><div class="cs-date">${DATES[i]}</div>`;
+    hdr.innerHTML = `<div class="cs-dow">${d}</div>`;
     grid.appendChild(hdr);
   });
   for (let hr = 0; hr < 24; hr++) {
@@ -1292,7 +1292,7 @@ function buildTrainingHeatmap(){
   corner.className = 'hm-tl'; corner.textContent = 'PHT'; grid.appendChild(corner);
   DAYS.forEach((d,i) => {
     const h = document.createElement('div'); h.className = 'hm-th';
-    h.innerHTML = `${d}<span class="hm-th-date">${DATES[i]}</span>`; grid.appendChild(h);
+    h.innerHTML = `${d}`; grid.appendChild(h);
   });
   for (let hr = 0; hr < 24; hr++) {
     const tl = document.createElement('div'); tl.className = 'hm-tl';
