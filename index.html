@@ -454,6 +454,7 @@ main { padding: 2.5rem 3rem; }
   <button class="tab-btn" onclick="switchTab('rotation',this)">Rotation Plan</button>
   <button class="tab-btn" onclick="switchTab('gaps',this)">Gap Analysis</button>
   <button class="tab-btn" onclick="switchTab('newbies',this)" style="color:#a78bfa">Current + Newbies ✦</button>
+  <button class="tab-btn" onclick="switchTab('training',this)" style="color:#e879f9">Newbie Training Schedule ✦</button>
 </nav>
 
 <main>
@@ -667,7 +668,42 @@ main { padding: 2.5rem 3rem; }
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════ NEWBIES ══ -->
+<!-- ══════════════════════════════════════════════════════ TRAINING ══ -->
+<section id="tab-training" class="section">
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#e879f9"></div>
+    <div class="sec-head-title">Newbie Training Schedule</div>
+    <div class="sec-head-sub">Named shifts · all times PHT</div>
+  </div>
+
+  <div class="blocks-legend" style="margin-bottom:1.25rem">
+    <div class="bl-item"><div class="bl-swatch" style="background:#38bdf8;opacity:0.7;border-radius:2px"></div><span style="color:#7dd3fc">OSR I</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#a78bfa;opacity:0.7;border-radius:2px"></div><span style="color:#c4b5fd">OSR II</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#fbbf24;opacity:0.7;border-radius:2px"></div><span style="color:#fbbf24">Team Lead</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#fb923c;opacity:0.7;border-radius:2px"></div><span style="color:#fb923c">Manager</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#e879f9;opacity:0.7;border-radius:2px"></div><span style="color:#e879f9">New Rep ✦</span></div>
+  </div>
+
+  <div class="hm-wrap" style="margin-bottom:2.5rem">
+    <div id="trainingScheduleGrid" style="display:grid;grid-template-columns:52px repeat(7,1fr);gap:2px;min-width:700px;font-family:'DM Mono',monospace;"></div>
+  </div>
+
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#e879f9"></div>
+    <div class="sec-head-title">Coverage Heatmap</div>
+    <div class="sec-head-sub">Headcount per hour · hover for names</div>
+  </div>
+  <div class="hm-wrap" style="margin-bottom:2.5rem">
+    <div class="hm-grid" id="trainingHeatmap"></div>
+  </div>
+
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#e879f9"></div>
+    <div class="sec-head-title">New Rep Schedules</div>
+    <div class="sec-head-sub">5 consecutive days · Thu–Mon · same shift all week</div>
+  </div>
+  <div id="trainingCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;"></div>
+</section>
 <section id="tab-newbies" class="section">
   <div class="sec-head">
     <div class="sec-head-dot" style="background:#5a6578"></div>
@@ -1185,6 +1221,134 @@ function buildNewbieCards(){
   });
 }
 
+// ── TRAINING DATA (different shift times — training tab only) ─────────────────
+// Aljen, Sienna, Aaron → 07:00–15:00 | Jherson → 00:00–08:00
+const TRAINING_DATA = [
+  { name:'Jherson', sh:0,  eh:8,  days:[3,4,5,6,0] },
+  { name:'Aljen',   sh:7,  eh:15, days:[3,4,5,6,0] },
+  { name:'Aaron',   sh:7,  eh:15, days:[3,4,5,6,0] },
+  { name:'Sienna',  sh:7,  eh:15, days:[3,4,5,6,0] },
+];
+
+const trainingCov = (function() {
+  const cov = Array.from({length:7}, ()=>Array.from({length:24}, ()=>[]));
+  CURRENT_SHIFTS.forEach(([name,,sd,sh,ed,eh]) => {
+    let d=sd,h=sh;
+    while((d<ed||(d===ed&&h<eh))&&d<7){ if(d>=0&&d<7&&h<24) cov[d][h].push(name); h++; if(h>=24){h=0;d++;} }
+  });
+  TRAINING_DATA.forEach(function(nb) {
+    nb.days.forEach(function(d) {
+      for (var h=nb.sh; h<nb.eh; h++) { if(h<24) cov[d][h].push(nb.name); }
+    });
+  });
+  return cov;
+})();
+
+// ── BUILD TRAINING TAB (exact copy of newbies tab, new IDs) ──────────────────
+function buildTrainingSchedule(){
+  const grid = document.getElementById('trainingScheduleGrid');
+  grid.innerHTML = '';
+  const corner = document.createElement('div');
+  corner.className = 'cs-corner'; corner.textContent = 'PHT';
+  grid.appendChild(corner);
+  DAYS.forEach((d,i) => {
+    const hdr = document.createElement('div'); hdr.className = 'cs-day-hdr';
+    hdr.innerHTML = `<div class="cs-dow">${d}</div><div class="cs-date">${DATES[i]}</div>`;
+    grid.appendChild(hdr);
+  });
+  for (let hr = 0; hr < 24; hr++) {
+    const tl = document.createElement('div'); tl.className = 'cs-time';
+    tl.textContent = `${hr.toString().padStart(2,'0')}:00`;
+    grid.appendChild(tl);
+    for (let di = 0; di < 7; di++) {
+      const cell = document.createElement('div'); cell.className = 'cs-cell';
+      CURRENT_SHIFTS.forEach(([name, role, sd, sh, ed, eh]) => {
+        if (sd === di && sh === hr) {
+          const chip = document.createElement('span');
+          chip.className = `cs-chip ${role}`;
+          chip.textContent = name;
+          chip.title = `${name} · ${role.toUpperCase()} · ${hr.toString().padStart(2,'0')}:00–${eh.toString().padStart(2,'0')}:00`;
+          cell.appendChild(chip);
+        }
+      });
+      TRAINING_DATA.forEach(function(nb) {
+        if (nb.days.indexOf(di) !== -1 && nb.sh === hr) {
+          const chip = document.createElement('span');
+          chip.className = 'cs-chip new';
+          chip.textContent = '\u2726 ' + nb.name;
+          chip.title = nb.name + ' · New Rep · ' + nb.sh.toString().padStart(2,'0') + ':00–' + nb.eh.toString().padStart(2,'0') + ':00';
+          cell.appendChild(chip);
+        }
+      });
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function buildTrainingHeatmap(){
+  const grid = document.getElementById('trainingHeatmap');
+  grid.innerHTML = '';
+  const corner = document.createElement('div');
+  corner.className = 'hm-tl'; corner.textContent = 'PHT'; grid.appendChild(corner);
+  DAYS.forEach((d,i) => {
+    const h = document.createElement('div'); h.className = 'hm-th';
+    h.innerHTML = `${d}<span class="hm-th-date">${DATES[i]}</span>`; grid.appendChild(h);
+  });
+  for (let hr = 0; hr < 24; hr++) {
+    const tl = document.createElement('div'); tl.className = 'hm-tl';
+    tl.textContent = `${hr.toString().padStart(2,'0')}:00`; grid.appendChild(tl);
+    for (let di = 0; di < 7; di++) {
+      const people = trainingCov[di][hr]; const count = people.length;
+      const c = hmColor(count);
+      const cell = document.createElement('div'); cell.className = 'hm-cell';
+      cell.style.cssText = `background:${c.bg};color:${c.text}`;
+      cell.textContent = count;
+      const uniq = [...new Set(people)].join(', ') || 'Nobody';
+      const newbies = TRAINING_DATA.filter(nb => nb.days.indexOf(di) !== -1 && hr >= nb.sh && hr < nb.eh).map(nb => nb.name);
+      const newbieNote = newbies.length ? `<div style="color:#e879f9;margin-top:2px">\u2726 ${newbies.join(', ')}</div>` : '';
+      const flag = count === 0 ? '<div class="tt-flag">🔴 No coverage</div>' : count === 1 ? '<div class="tt-flag">⚠️ Thin</div>' : '';
+      cell.addEventListener('mousemove', ev => showTip(ev, `<div class="tt-title">${DAYS[di]} ${hr.toString().padStart(2,'0')}:00 · ${count} reps</div><div class="tt-names">${uniq}</div>${newbieNote}${flag}`));
+      cell.addEventListener('mouseleave', hideTip);
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function buildTrainingCards(){
+  const container = document.getElementById('trainingCards');
+  container.innerHTML = '';
+  const DAY_NAMES = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  TRAINING_DATA.forEach(function(nb) {
+    const shiftLabel = nb.sh.toString().padStart(2,'0') + ':00–' + nb.eh.toString().padStart(2,'0') + ':00';
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--surface);border:1px solid rgba(232,121,249,0.25);border-radius:12px;overflow:hidden;';
+    const initials = nb.name.substring(0,2).toUpperCase();
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'background:#e879f9;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.65rem;';
+    hdr.innerHTML = `<div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.2);color:#1a0020;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0">${initials}</div><div><div style="font-size:0.92rem;font-weight:800;color:#1a0020;">${nb.name}</div><div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:rgba(0,0,0,0.55);margin-top:1px;">${shiftLabel} PHT</div></div>`;
+    card.appendChild(hdr);
+    const body = document.createElement('div');
+    body.style.cssText = 'padding:0.85rem 1rem;';
+    const weekStrip = document.createElement('div');
+    weekStrip.style.cssText = 'display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:0.85rem;';
+    DAY_NAMES.forEach(function(day, i) {
+      const isOn = nb.days.indexOf(i) !== -1;
+      const d = document.createElement('div');
+      d.style.cssText = `border-radius:4px;padding:5px 2px;text-align:center;font-family:'DM Mono',monospace;font-size:0.52rem;${isOn ? 'background:#e879f9;color:#1a0020;font-weight:700;' : 'background:var(--surface2);color:var(--muted);'}`;
+      d.innerHTML = `<span style="display:block;opacity:0.7;margin-bottom:2px">${day}</span><span style="font-size:0.58rem;font-weight:700">${isOn ? 'ON' : 'OFF'}</span>`;
+      weekStrip.appendChild(d);
+    });
+    body.appendChild(weekStrip);
+    const offDays = [0,1,2,3,4,5,6].filter(i => nb.days.indexOf(i) === -1).map(i => DAY_NAMES[i]);
+    const details = document.createElement('div');
+    details.style.cssText = 'font-family:"DM Mono",monospace;font-size:0.62rem;color:var(--muted);line-height:1.9;border-top:1px solid var(--border);padding-top:0.65rem;';
+    details.innerHTML = `<span style="color:var(--muted2)">Shift</span> &nbsp;${shiftLabel}<br><span style="color:var(--muted2)">Days</span> &nbsp;&nbsp;Thu · Fri · Sat · Sun · Mon<br><span style="color:var(--muted2)">Off</span> &nbsp;&nbsp;&nbsp;${offDays.join(' & ')}<br><span style="color:var(--muted2)">Hours</span> &nbsp;${nb.days.length * (nb.eh - nb.sh)}h / week`;
+    body.appendChild(details);
+    card.appendChild(body);
+    container.appendChild(card);
+  });
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 function switchTab(id, btn){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -1201,6 +1365,9 @@ buildTeam();
 buildNewbiesSchedule();
 buildNewbiesHeatmap();
 buildNewbieCards();
+buildTrainingSchedule();
+buildTrainingHeatmap();
+buildTrainingCards();
 </script>
 </body>
 </html>
