@@ -367,7 +367,12 @@ main { padding: 2.5rem 3rem; }
 .cs-chip.osr2 { background:rgba(167,139,250,0.15); color:#c4b5fd; }
 .cs-chip.tl   { background:rgba(251,191,36,0.15);  color:#fbbf24; }
 .cs-chip.mgr  { background:rgba(251,146,60,0.13);  color:#fb923c; }
-.cs-chip.new  { background:#e879f9; color:#1a0020; font-weight:700; }
+.cs-chip.day  { background:rgba(124,58,237,0.18); color:#c4b5fd; border:1px solid rgba(124,58,237,0.3); }
+.cs-chip.night{ background:rgba(8,145,178,0.18);  color:#7dd3fc; border:1px solid rgba(8,145,178,0.3); }
+.cs-chip.mid  { background:rgba(5,150,105,0.18);  color:#6ee7b7; border:1px solid rgba(5,150,105,0.3); }
+.cs-chip.tl-day  { background:#7c3aed; color:#fff; font-weight:700; }
+.cs-chip.tl-night{ background:#0891b2; color:#fff; font-weight:700; }
+.cs-chip.tl-mid  { background:#059669; color:#fff; font-weight:700; }
 
 /* ── NEWBIE INDIVIDUAL CARDS ── */
 .newbie-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
@@ -440,204 +445,93 @@ main { padding: 2.5rem 3rem; }
     <p>Current schedule &amp; Proposed revamp &nbsp;·&nbsp; Philippine Time (PHT)</p>
   </div>
   <div class="header-badges">
-    <div class="badge">Team: <strong>22 reps</strong></div>
-    <div class="badge">Blocks: <strong>3 × 8h</strong></div>
-    <div class="badge">Rotation: <strong>4-month cycles</strong></div>
-    <div class="badge">TLs: <strong>2 → 3</strong></div>
+    <div class="badge">Team: <strong>23 reps</strong></div>
   </div>
 </header>
 
 <nav class="tabs-bar">
   <button class="tab-btn active" onclick="switchTab('newbies',this)" style="color:#a78bfa">Current + Newbies ✦</button>
   <button class="tab-btn" onclick="switchTab('proposed',this)">Proposed Schedule</button>
-  <button class="tab-btn" onclick="switchTab('team',this)">Team Breakdown</button>
-  <button class="tab-btn" onclick="switchTab('rotation',this)">Rotation Plan</button>
-  <button class="tab-btn" onclick="switchTab('gaps',this)">Gap Analysis</button>
+  <button class="tab-btn" onclick="switchTab('proposedpdt',this)">Proposed Schedule (Pacific Time)</button>
+  <button class="tab-btn" onclick="switchTab('gapanalysis',this)">Gap Analysis</button>
 </nav>
 
 <main>
 
-<!-- ══════════════════════════════════════════════════════ CURRENT ══ -->
 <!-- ══════════════════════════════════════════════════════ PROPOSED ══ -->
 <section id="tab-proposed" class="section">
   <div class="sec-head">
-    <div class="sec-head-dot" style="background:#7c3aed"></div>
-    <div class="sec-head-title">Proposed Schedule — 3-Block System</div>
-    <div class="sec-head-sub">Color = block · hover for names · PHT</div>
+    <div class="sec-head-dot" style="background:#f59e0b"></div>
+    <div class="sec-head-title">Proposed Schedule — 3 Shift Blocks</div>
+    <div class="sec-head-sub">All times Philippine Time (PHT)</div>
   </div>
 
-  <div class="blocks-legend">
-    <div class="bl-item"><div class="bl-swatch" style="background:#7c3aed"></div><span style="color:#c4b5fd">Block A 22:00–06:00</span><span style="color:var(--muted);margin-left:4px">(07:00–15:00 PDT)</span></div>
-    <div class="bl-item"><div class="bl-swatch" style="background:#0891b2"></div><span style="color:#7dd3fc">Block B 06:00–14:00</span><span style="color:var(--muted);margin-left:4px">(15:00–23:00 PDT)</span></div>
-    <div class="bl-item"><div class="bl-swatch" style="background:#059669"></div><span style="color:#6ee7b7">Block C 14:00–22:00</span><span style="color:var(--muted);margin-left:4px">(23:00–07:00 PDT)</span></div>
+  <div class="blocks-legend" style="margin-bottom:1.5rem">
+    <div class="bl-item"><div class="bl-swatch" style="background:#7c3aed;border-radius:2px"></div><span style="color:#c4b5fd">Day Team &nbsp;00:00–08:00 &nbsp;·&nbsp; TL: Greg</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#0891b2;border-radius:2px"></div><span style="color:#7dd3fc">Night Team &nbsp;08:00–16:00 &nbsp;·&nbsp; TL: Richelle</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#059669;border-radius:2px"></div><span style="color:#6ee7b7">Mid Shift &nbsp;16:00–24:00 &nbsp;·&nbsp; TL: Jurenne</span></div>
   </div>
 
-  <div class="proposed-grid-wrap">
-    <div class="proposed-grid" id="proposedGrid"></div>
+  <!-- Schedule grid -->
+  <div class="hm-wrap" style="margin-bottom:2.5rem">
+    <div id="proposedNewGrid" style="display:grid;grid-template-columns:52px repeat(7,1fr);gap:2px;min-width:700px;font-family:'DM Mono',monospace;"></div>
   </div>
 
-  <!-- Proposed heatmap -->
-  <div class="sec-head" style="margin-top:2.5rem">
-    <div class="sec-head-dot" style="background:#0891b2"></div>
-    <div class="sec-head-title">Proposed Coverage Heatmap</div>
-    <div class="sec-head-sub">Headcount per hour</div>
+  <!-- Heatmap -->
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#f59e0b"></div>
+    <div class="sec-head-title">Coverage Heatmap</div>
+    <div class="sec-head-sub">Headcount per hour · hover for names</div>
   </div>
-  <div class="hm-wrap">
-    <div class="hm-grid" id="proposedHeatmap"></div>
+  <div class="hm-wrap" style="margin-bottom:2.5rem">
+    <div class="hm-grid" id="proposedNewHeatmap"></div>
   </div>
+
+  <!-- Team cards -->
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#f59e0b"></div>
+    <div class="sec-head-title">Team Assignments</div>
+    <div class="sec-head-sub">By shift block</div>
+  </div>
+  <div id="proposedTeamCards" style="display:flex;flex-direction:column;gap:1.5rem;"></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ PROPOSED PDT ══ -->
+<section id="tab-proposedpdt" class="section">
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#f59e0b"></div>
+    <div class="sec-head-title">Proposed Schedule — Pacific Time (PDT)</div>
+    <div class="sec-head-sub">All times converted to Pacific Daylight Time (PDT = PHT − 15h)</div>
+  </div>
+
+  <div class="blocks-legend" style="margin-bottom:1.5rem">
+    <div class="bl-item"><div class="bl-swatch" style="background:#7c3aed;border-radius:2px"></div><span style="color:#c4b5fd">Day Team &nbsp;09:00–17:00 PDT (prev day) &nbsp;·&nbsp; TL: Greg</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#0891b2;border-radius:2px"></div><span style="color:#7dd3fc">Night Team &nbsp;17:00–01:00 PDT &nbsp;·&nbsp; TL: Richelle</span></div>
+    <div class="bl-item"><div class="bl-swatch" style="background:#059669;border-radius:2px"></div><span style="color:#6ee7b7">Mid Shift &nbsp;01:00–09:00 PDT &nbsp;·&nbsp; TL: Jurenne</span></div>
+  </div>
+
+  <div class="hm-wrap" style="margin-bottom:2.5rem">
+    <div id="proposedPDTGrid" style="display:grid;grid-template-columns:52px repeat(7,1fr);gap:2px;min-width:700px;font-family:'DM Mono',monospace;"></div>
+  </div>
+
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#f59e0b"></div>
+    <div class="sec-head-title">Coverage Heatmap</div>
+    <div class="sec-head-sub">Headcount per hour (PDT) · hover for names</div>
+  </div>
+  <div class="hm-wrap" style="margin-bottom:2.5rem">
+    <div class="hm-grid" id="proposedPDTHeatmap"></div>
+  </div>
+
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#f59e0b"></div>
+    <div class="sec-head-title">Team Assignments</div>
+    <div class="sec-head-sub">By shift block · times in PDT</div>
+  </div>
+  <div id="proposedPDTCards" style="display:flex;flex-direction:column;gap:1.5rem;"></div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════ TEAM ══ -->
-<section id="tab-team" class="section">
-  <div class="sec-head">
-    <div class="sec-head-dot" style="background:#fbbf24"></div>
-    <div class="sec-head-title">Team Breakdown by Block</div>
-    <div class="sec-head-sub">Proposed assignments</div>
-  </div>
-
-  <div class="block-section">
-    <div class="block-label A">◆ Block A &nbsp; 22:00–06:00 PHT &nbsp; TL: Greg &nbsp;·&nbsp; 2× Key Support</div>
-    <div class="team-grid" id="teamA"></div>
-  </div>
-  <div class="block-section">
-    <div class="block-label B">◆ Block B &nbsp; 06:00–14:00 PHT &nbsp; TL: Richelle</div>
-    <div class="team-grid" id="teamB"></div>
-  </div>
-  <div class="block-section">
-    <div class="block-label C">◆ Block C &nbsp; 14:00–22:00 PHT &nbsp; TL: Jurenne (promoted)</div>
-    <div class="team-grid" id="teamC"></div>
-  </div>
-  <div class="block-section">
-    <div class="block-label EX">★ Exceptions &nbsp; 03:00–11:00 PHT &nbsp; No rotation</div>
-    <div class="team-grid" id="teamEX"></div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════ ROTATION ══ -->
-<section id="tab-rotation" class="section">
-  <div class="sec-head">
-    <div class="sec-head-dot" style="background:#059669"></div>
-    <div class="sec-head-title">4-Month Rotation Plan</div>
-    <div class="sec-head-sub">Groups rotate as a team · TL travels with their group</div>
-  </div>
-
-  <div class="rotation-grid">
-    <div class="rotation-cycle">
-      <div class="rc-period">Cycle 1 &nbsp; Jan – Apr</div>
-      <div class="rc-row"><span class="rc-block A">Block A</span><span class="rc-group">Group 1</span><span class="rc-arrow">22:00–06:00</span></div>
-      <div class="rc-row"><span class="rc-block B">Block B</span><span class="rc-group">Group 2</span><span class="rc-arrow">06:00–14:00</span></div>
-      <div class="rc-row"><span class="rc-block C">Block C</span><span class="rc-group">Group 3</span><span class="rc-arrow">14:00–22:00</span></div>
-    </div>
-    <div class="rotation-cycle">
-      <div class="rc-period">Cycle 2 &nbsp; May – Aug</div>
-      <div class="rc-row"><span class="rc-block B">Block B</span><span class="rc-group">Group 1</span><span class="rc-arrow">06:00–14:00</span></div>
-      <div class="rc-row"><span class="rc-block C">Block C</span><span class="rc-group">Group 2</span><span class="rc-arrow">14:00–22:00</span></div>
-      <div class="rc-row"><span class="rc-block A">Block A</span><span class="rc-group">Group 3</span><span class="rc-arrow">22:00–06:00</span></div>
-    </div>
-    <div class="rotation-cycle">
-      <div class="rc-period">Cycle 3 &nbsp; Sep – Dec</div>
-      <div class="rc-row"><span class="rc-block C">Block C</span><span class="rc-group">Group 1</span><span class="rc-arrow">14:00–22:00</span></div>
-      <div class="rc-row"><span class="rc-block A">Block A</span><span class="rc-group">Group 2</span><span class="rc-arrow">22:00–06:00</span></div>
-      <div class="rc-row"><span class="rc-block B">Block B</span><span class="rc-group">Group 3</span><span class="rc-arrow">06:00–14:00</span></div>
-    </div>
-  </div>
-
-  <!-- Group breakdown -->
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:2rem;">
-    <div style="background:var(--surface);border:1px solid var(--blockA-border);border-radius:10px;padding:1.1rem;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:#c4b5fd;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.6rem">Group 1 · TL: Greg</div>
-      <div style="font-size:0.8rem;font-weight:700;color:var(--text);line-height:2">Joseph · Xander · Dante · Kenneth · Neil · JP</div>
-      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.5rem">Starts in Block A (Graveyard) · 2× Key Support</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--blockB-border);border-radius:10px;padding:1.1rem;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:#7dd3fc;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.6rem">Group 2 · TL: Richelle</div>
-      <div style="font-size:0.8rem;font-weight:700;color:var(--text);line-height:2">Larry · Dianne · Renn · Dan · Gretchen · Pau</div>
-      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.5rem">Starts in Block B (Morning)</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--blockC-border);border-radius:10px;padding:1.1rem;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:#6ee7b7;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.6rem">Group 3 · TL: Jurenne</div>
-      <div style="font-size:0.8rem;font-weight:700;color:var(--text);line-height:2">Rae · Nomar · Jomari · Jel · Nam</div>
-      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.5rem">Starts in Block C (Afternoon)</div>
-    </div>
-  </div>
-
-  <!-- TL Handoff -->
-  <div class="tl-handoff">
-    <h3>TL Handoff Protocol</h3>
-    <div class="handoff-row">
-      <div class="handoff-time">06:00 PHT</div>
-      <div class="handoff-tls">Greg → Richelle</div>
-      <div class="handoff-desc">End of Block A → Start of Block B. Greg starts 15 mins early (05:45) for overlap. US morning handoff — highest priority escalations flagged.</div>
-    </div>
-    <div class="handoff-row">
-      <div class="handoff-time">14:00 PHT</div>
-      <div class="handoff-tls">Richelle → Jurenne</div>
-      <div class="handoff-desc">End of Block B → Start of Block C. Richelle stays until 14:15 for structured pass-off of open cases and queue status.</div>
-    </div>
-    <div class="handoff-row">
-      <div class="handoff-time">22:00 PHT</div>
-      <div class="handoff-tls">Jurenne → Greg</div>
-      <div class="handoff-desc">End of Block C → Start of Block A. Jurenne stays until 22:15. Greg comes in at 21:45 for context on any overnight critical items.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════ GAPS ══ -->
-<section id="tab-gaps" class="section">
-  <div class="sec-head">
-    <div class="sec-head-dot" style="background:#d97706"></div>
-    <div class="sec-head-title">Gap Analysis &amp; Recommendations</div>
-    <div class="sec-head-sub">Proposed schedule vs current</div>
-  </div>
-  <div class="gap-grid">
-    <div class="gap-card ok">
-      <div class="gap-card-title">Zero coverage gaps <span class="status-pill pill-ok">Resolved</span></div>
-      <div class="gap-body">The 3-block system eliminates all zero-coverage windows. Every hour of every day has at least 5–7 reps on shift — far better than the current 1-person Sunday gaps.</div>
-    </div>
-    <div class="gap-card ok">
-      <div class="gap-card-title">TL coverage upgraded <span class="status-pill pill-ok">Resolved</span></div>
-      <div class="gap-body">3 TLs replace the current 2. Each block has a dedicated TL with clean 15-min overlap handoffs at 06:00, 14:00, and 22:00 PHT. No more TLs covering hours at the fringe of their shift.</div>
-    </div>
-    <div class="gap-card ok">
-      <div class="gap-card-title">Special forces every block <span class="status-pill pill-ok">Covered</span></div>
-      <div class="gap-body">
-        <strong>Block A</strong> · Key Support ×2 (Xander, Dante) · Brokerage Change (Joseph, JP) · Agent Subdomains (Kenneth, Neil)<br><br>
-        <strong>Block B</strong> · Key Support (Renn) · Brokerage Change (Larry, Dianne) · Agent Subdomains (Dan, Pau) · SEO Cases (Gretchen)<br><br>
-        <strong>Block C</strong> · Key Support (Rae) · Brokerage Change (Nomar, Nam, Jel) · Agent Subdomains (Jomari)<br><br>
-        <strong>SEO Cases</strong> · Covered across all hours by Dona, Maybelle (03:00–11:00) and Gretchen (Block B). TLs handle SSPW in all blocks.
-      </div>
-    </div>
-    <div class="gap-card info">
-      <div class="gap-card-title">3rd TL: Promote Jurenne <span class="status-pill pill-info">Recommendation</span></div>
-      <div class="gap-body">Jurenne is the promoted TL for Block C — already a senior OSR I specialist in Brokerage Change with strong operational knowledge. Her Brokerage Change queue coverage in Block C is backfilled by training Nomar. Renn remains OSR II Key Support in Block C.</div>
-    </div>
-    <div class="gap-card ok">
-      <div class="gap-card-title">SSPW ownership clarified <span class="status-pill pill-ok">Resolved</span></div>
-      <div class="gap-body">SSPW is no longer a rep-level queue. All 3 TLs (Greg, Richelle, Jurenne) own SSPW for their respective blocks. This simplifies the queue structure and keeps escalations at the TL level.</div>
-    </div>
-    <div class="gap-card info">
-      <div class="gap-card-title">Block C SF coverage <span class="status-pill pill-info">Note</span></div>
-      <div class="gap-body">
-        Block C has strong Brokerage Change coverage (Nomar, Nam, Jel) and Key Support (Rae).<br><br>
-        · <strong>Jomari</strong> → Agent Subdomains (already assigned)<br>
-        · No SEO Cases rep in Block C — Gretchen (Block B) and Dona/Maybelle cover the adjacent hours as natural overlap.
-      </div>
-    </div>
-    <div class="gap-card info">
-      <div class="gap-card-title">SEO Cases coverage <span class="status-pill pill-info">Note</span></div>
-      <div class="gap-body">SEO Cases is covered by Dona &amp; Maybelle (03:00–11:00, no rotation) and Gretchen in Block B (06:00–14:00). This gives SEO coverage across roughly 00:00–14:00 PHT. Block A and C do not have a dedicated SEO rep — flag if more SEO coverage is needed overnight.</div>
-    </div>
-    <div class="gap-card warn">
-      <div class="gap-card-title">Dona &amp; Maybelle straddle blocks <span class="status-pill pill-warn">Note</span></div>
-      <div class="gap-body">Their 03:00–11:00 shift spans Block A and Block B. They remain as permanent exceptions with no rotation. They serve as a natural bridge between the two overnight/morning blocks and provide SEO Cases coverage during the transition window.</div>
-    </div>
-    <div class="gap-card ok">
-      <div class="gap-card-title">Graveyard fairness solved <span class="status-pill pill-ok">By design</span></div>
-      <div class="gap-body">No rep spends more than 4 months per year on the 22:00–06:00 graveyard shift. The rotation ensures each group cycles through all 3 blocks — including the TLs.</div>
-    </div>
-  </div>
-</section>
-
 <section id="tab-newbies" class="section active">
   <div class="sec-head">
     <div class="sec-head-dot" style="background:#5a6578"></div>
@@ -672,6 +566,28 @@ main { padding: 2.5rem 3rem; }
     <div class="sec-head-sub">5 consecutive days · Thu–Mon · same shift all week</div>
   </div>
   <div id="newbieCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;"></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ GAP ANALYSIS ══ -->
+<section id="tab-gapanalysis" class="section">
+  <div class="sec-head">
+    <div class="sec-head-dot" style="background:#f59e0b"></div>
+    <div class="sec-head-title">Gap Analysis</div>
+    <div class="sec-head-sub">Coverage gaps to address in the proposed schedule</div>
+  </div>
+
+  <div class="gap-grid">
+    <div class="gap-card warn" style="grid-column:1/-1">
+      <div class="gap-card-title">
+        Weekend Coverage Gap
+        <span class="status-pill pill-warn">Action Needed</span>
+      </div>
+      <div class="gap-body">
+        Since we moved <strong>Aljen, Sienna, Jherson, and Aaron</strong> to the Day Team, we need to backfill their vacated shifts so that we can beef up our weekend coverage again.<br><br>
+        Their previous weekend shifts are now unoccupied, which leaves the team thin on Saturdays and Sundays. Consider hiring or reassigning reps to cover these windows and ensure we maintain strong 24/7 coverage across the full week.
+      </div>
+    </div>
+  </div>
 </section>
 
 </main>
@@ -909,25 +825,6 @@ const TEAM_DATA = {
 
 function sfClass(sf){ return 'sf-'+sf; }
 
-function buildTeam(){
-  Object.entries(TEAM_DATA).forEach(([block, members])=>{
-    const container=document.getElementById('team'+block);
-    members.forEach(m=>{
-      const initials=m.name.substring(0,2).toUpperCase();
-      const card=document.createElement('div'); card.className='person-card';
-      card.innerHTML=`
-        <div class="pc-top">
-          <div class="avatar" style="background:${m.color}1a;color:${m.color}">${initials}</div>
-          <div><div class="pc-name">${m.name}</div><div class="pc-role">${m.role}</div></div>
-        </div>
-        <div class="pc-body">
-          <strong>Block</strong> ${{A:'A · 22:00–06:00',B:'B · 06:00–14:00',C:'C · 14:00–22:00',EX:'Exception · 03:00–11:00'}[block]}<br>
-          <span class="sf-pill ${sfClass(m.sf)}">${m.sfLabel}</span>
-        </div>`;
-      container.appendChild(card);
-    });
-  });
-}
 
 // ── NEWBIE DATA ───────────────────────────────────────────────────────────────
 // Thu(3), Fri(4), Sat(5), Sun(6), Mon(0) — same shift all 5 days
@@ -1090,6 +987,394 @@ function buildNewbieCards(){
   });
 }
 
+// ── PROPOSED SCHEDULE DATA ────────────────────────────────────────────────────
+// Day Team:   23:00–07:00  TL: Greg
+// Day Team:   00:00–08:00  TL: Greg
+// Night Team: 08:00–16:00  TL: Richelle
+// Mid Shift:  16:00–24:00  TL: Jurenne
+// All reps work all 7 days (can be adjusted later)
+
+const PROPOSED_BLOCKS = [
+  // Day Team 00:00–08:00
+  { name:'Greg',    block:'day', tl:true,  sh:0,  eh:8, days:[1,2,3,4,5] },
+  { name:'Greg',    block:'day', tl:true,  sh:0,  eh:8, days:[0,6], dim:true },
+  { name:'JP',      block:'day', tl:false, sh:0,  eh:8,  days:[1,2,3,4,5] },
+  { name:'Jel',     block:'day', tl:false, sh:0,  eh:8,  days:[0,1,2,3,4] },
+  { name:'Neil',    block:'day', tl:false, sh:0,  eh:8,  days:[0,1,2,3,4] },
+  { name:'Kenneth', block:'day', tl:false, sh:0,  eh:8,  days:[1,2,3,4,5] },
+  { name:'Jherson', block:'day', tl:false, sh:0,  eh:8,  days:[2,3,4,5,6] },
+  { name:'Aaron',   block:'day', tl:false, sh:0,  eh:8,  days:[2,3,4,5,6] },
+  { name:'Aljen',   block:'day', tl:false, sh:0,  eh:8,  days:[0,1,2,3,4] },
+  { name:'Sienna',  block:'day', tl:false, sh:0,  eh:8,  days:[0,1,2,3,4] },
+  { name:'Xander - Key Team',  block:'day',   tl:false, sh:0,  eh:8,  days:[1,2,3,4,5] },
+  // Night Team 08:00–16:00
+  { name:'Richelle', block:'night', tl:true,  sh:8,  eh:16, days:[0,1,2,3,4] },
+  { name:'Richelle', block:'night', tl:true,  sh:8,  eh:16, days:[5,6], dim:true },
+  { name:'Larry',    block:'night', tl:false, sh:8,  eh:16, days:[0,1,4,5,6] },
+  { name:'Pau',      block:'night', tl:false, sh:8,  eh:16, days:[1,2,3,4,5] },
+  { name:'Joseph',   block:'night', tl:false, sh:8,  eh:16, days:[0,1,2,3,4] },
+  { name:'Gretchen - SEO Team', block:'night', tl:false, sh:8,  eh:16, days:[1,2,3,4,5] },
+  { name:'Dona - SEO Team',     block:'night', tl:false, sh:3,  eh:11, days:[1,2,3,4,5] },
+  { name:'Maybelle - SEO Team', block:'night', tl:false, sh:3,  eh:11, days:[1,2,3,4,5] },
+  { name:'Jomari',   block:'night', tl:false, sh:8,  eh:16, days:[1,2,3,4,5] },
+  { name:'Renn - Key Team',     block:'night', tl:false, sh:8,  eh:16, days:[0,1,2,3,4] },
+  { name:'Nam',                 block:'night', tl:false, sh:8,  eh:16, days:[6,0,1,2,3] },
+  { name:'Dante - Key Team',    block:'day', tl:false, sh:0,  eh:8,  days:[0,1,2,3,6] },
+  // Mid Shift 16:00–24:00
+  { name:'Jurenne',  block:'mid', tl:true,  sh:16, eh:24, days:[0,1,2,3,4] },
+  { name:'Jurenne',  block:'mid', tl:true,  sh:16, eh:24, days:[5,6], dim:true },
+  { name:'Dianne',   block:'mid', tl:false, sh:16, eh:24, days:[0,1,2,3,4] },
+  { name:'Dan - Key Team',      block:'mid', tl:false, sh:16, eh:24, days:[0,1,2,3,6] },
+  { name:'Nomar - Key Team',    block:'mid', tl:false, sh:16, eh:24, days:[0,1,2,3,4] },
+  { name:'Rae - Key Team',      block:'mid', tl:false, sh:16, eh:24, days:[1,2,3,4,5] },
+];
+
+// Build proposed coverage (all 7 days)
+const proposedNewCov = (function(){
+  const cov = Array.from({length:7}, ()=>Array.from({length:24}, ()=>[]));
+  PROPOSED_BLOCKS.forEach(function(r){
+    const workDays = r.days || [0,1,2,3,4,5,6];
+    workDays.forEach(function(d){
+      for(let h=r.sh;h<r.eh;h++){
+        if(h<24 && !r.dim) cov[d][h].push({name:r.name, block:r.block, tl:r.tl});
+      }
+    });
+  });
+  return cov;
+})();
+
+// ── BUILD PROPOSED SCHEDULE GRID ─────────────────────────────────────────────
+function buildProposedNewGrid(){
+  const grid = document.getElementById('proposedNewGrid');
+  grid.innerHTML = '';
+
+  const corner = document.createElement('div');
+  corner.className = 'cs-corner'; corner.textContent = 'PHT';
+  grid.appendChild(corner);
+
+  DAYS.forEach(function(d){
+    const hdr = document.createElement('div'); hdr.className = 'cs-day-hdr';
+    hdr.innerHTML = `<div class="cs-dow">${d}</div>`;
+    grid.appendChild(hdr);
+  });
+
+  // Show chips only at shift start hour
+  // Day team starts at 23:00, Night at 07:00, Mid at 15:00
+  const startHours = [0, 7, 15, 23]; // 0 = carry-over from Day team overnight
+
+  for(let hr=0; hr<24; hr++){
+    const tl = document.createElement('div'); tl.className = 'cs-time';
+    tl.textContent = `${hr.toString().padStart(2,'0')}:00`;
+    grid.appendChild(tl);
+
+    for(let di=0; di<7; di++){
+      const cell = document.createElement('div'); cell.className = 'cs-cell';
+
+      // Show chips for reps whose shift starts at this hour on this day
+      const shownAtThisHour = new Set();
+      PROPOSED_BLOCKS.forEach(function(r){
+        const workDays = r.days || [0,1,2,3,4,5,6];
+        const key = r.name + (r.dim ? '-dim' : '');
+        if(r.sh === hr && workDays.indexOf(di) !== -1 && !shownAtThisHour.has(key)){
+          shownAtThisHour.add(key);
+          const chip = document.createElement('span');
+          const cls = r.tl ? `cs-chip tl-${r.block}` : `cs-chip ${r.block}`;
+          chip.className = cls;
+          if(r.dim) chip.style.cssText = 'opacity:0.3;font-style:italic;';
+          chip.textContent = r.tl ? `★ ${r.name}` : r.name.replace(' - Key Team', '').replace(' - SEO Team', '');
+          if(!r.dim && r.name.includes('Key Team')){
+            const keySpan = document.createElement('span');
+            keySpan.style.cssText = 'color:#fbbf24;font-size:0.5rem;margin-left:2px;';
+            keySpan.textContent = ' - Key Team';
+            chip.appendChild(keySpan);
+          }
+          if(!r.dim && r.name.includes('SEO Team')){
+            const seoSpan = document.createElement('span');
+            seoSpan.style.cssText = 'color:#e879f9;font-size:0.5rem;margin-left:2px;';
+            seoSpan.textContent = ' - SEO Team';
+            chip.appendChild(seoSpan);
+          }
+          const startLabel = r.sh.toString().padStart(2,'0')+':00';
+          const endLabel = r.eh.toString().padStart(2,'0')+':00';
+          chip.title = `${r.name} · ${r.block==='day'?'Day Team':r.block==='night'?'Night Team':'Mid Shift'} · ${startLabel}–${endLabel}${r.dim?' (rest day)':''}`;
+          cell.appendChild(chip);
+        }
+      });
+
+      grid.appendChild(cell);
+    }
+  }
+}
+
+// ── BUILD PROPOSED HEATMAP ────────────────────────────────────────────────────
+function buildProposedNewHeatmap(){
+  const grid = document.getElementById('proposedNewHeatmap');
+  grid.innerHTML = '';
+  const corner = document.createElement('div');
+  corner.className='hm-tl'; corner.textContent='PHT'; grid.appendChild(corner);
+  DAYS.forEach(function(d){
+    const h = document.createElement('div'); h.className='hm-th';
+    h.innerHTML=`${d}`; grid.appendChild(h);
+  });
+  for(let hr=0;hr<24;hr++){
+    const tl=document.createElement('div'); tl.className='hm-tl';
+    tl.textContent=`${hr.toString().padStart(2,'0')}:00`; grid.appendChild(tl);
+    for(let di=0;di<7;di++){
+      const entries=proposedNewCov[di][hr];
+      const count=[...new Set(entries.map(e=>e.name))].length;
+      const c=hmColor(count);
+      const cell=document.createElement('div'); cell.className='hm-cell';
+      cell.style.cssText=`background:${c.bg};color:${c.text}`;
+      cell.textContent=count;
+      const names=[...new Set(entries.map(e=>e.name))].join(', ')||'Nobody';
+      cell.addEventListener('mousemove',ev=>showTip(ev,`<div class="tt-title">${DAYS[di]} ${hr.toString().padStart(2,'0')}:00 · ${count} reps</div><div class="tt-names">${names}</div>`));
+      cell.addEventListener('mouseleave',hideTip);
+      grid.appendChild(cell);
+    }
+  }
+}
+
+// ── BUILD PROPOSED TEAM CARDS ─────────────────────────────────────────────────
+function buildProposedTeamCards(){
+  const container = document.getElementById('proposedTeamCards');
+  container.innerHTML = '';
+
+  const blocks = [
+    { key:'day',   label:'Day Team',   hours:'00:00–08:00', tl:'Greg',     color:'#7c3aed', textColor:'#c4b5fd' },
+    { key:'night', label:'Night Team', hours:'08:00–16:00', tl:'Richelle', color:'#0891b2', textColor:'#7dd3fc' },
+    { key:'mid',   label:'Mid Shift',  hours:'16:00–24:00', tl:'Jurenne',  color:'#059669', textColor:'#6ee7b7' },
+  ];
+
+  // Deduplicate PROPOSED_BLOCKS by name+block
+  const seen = new Set();
+  const deduped = PROPOSED_BLOCKS.filter(r=>{
+    const k=r.name+r.block;
+    if(seen.has(k)) return false;
+    seen.add(k); return true;
+  });
+
+  blocks.forEach(function(b){
+    const members = deduped.filter(r=>r.block===b.key);
+    const tl = members.find(r=>r.tl);
+    const reps = members.filter(r=>!r.tl);
+
+    const section = document.createElement('div');
+    section.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;';
+
+    // Header
+    const hdr = document.createElement('div');
+    hdr.style.cssText = `background:${b.color}22;border-bottom:1px solid ${b.color}44;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;`;
+    hdr.innerHTML = `
+      <div>
+        <div style="font-size:1rem;font-weight:800;color:${b.textColor}">${b.label}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);margin-top:2px">${b.hours} PHT · TL: ${b.tl}</div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted)">${members.length} members</div>`;
+    section.appendChild(hdr);
+
+    // Members
+    const body = document.createElement('div');
+    body.style.cssText = 'padding:1rem 1.25rem;display:flex;flex-wrap:wrap;gap:8px;';
+
+    members.forEach(function(r){
+      const isKeyTeam = r.name.includes('Key Team');
+      const isSeoTeam = r.name.includes('SEO Team');
+      const displayName = r.name.replace(' - Key Team', '').replace(' - SEO Team', '');
+      const pill = document.createElement('span');
+      if(r.tl){
+        pill.style.cssText = `display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font-size:0.72rem;font-weight:700;background:${b.color};color:#fff;`;
+        pill.textContent = `★ ${displayName}`;
+      } else {
+        pill.style.cssText = `display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font-size:0.72rem;font-weight:500;background:${b.color}22;color:${b.textColor};border:1px solid ${b.color}44;`;
+        pill.textContent = displayName;
+        if(isKeyTeam){
+          const kt = document.createElement('span');
+          kt.style.cssText = 'color:#fbbf24;font-size:0.6rem;font-weight:700;';
+          kt.textContent = ' - Key Team';
+          pill.appendChild(kt);
+        }
+        if(isSeoTeam){
+          const st = document.createElement('span');
+          st.style.cssText = 'color:#e879f9;font-size:0.6rem;font-weight:700;';
+          st.textContent = ' - SEO Team';
+          pill.appendChild(st);
+        }
+      }
+      body.appendChild(pill);
+    });
+    section.appendChild(body);
+    container.appendChild(section);
+  });
+}
+
+// ── PDT HELPERS ───────────────────────────────────────────────────────────────
+// PHT (UTC+8) → PDT (UTC-7): PDT = PHT − 15h
+// Since PHT is ahead, a PHT hour converts to previous calendar day in PDT if h < 15
+function toPDT(h){ return ((h - 15) % 24 + 24) % 24; }
+function pdtDay(phtDay, phtHour){ return phtHour < 15 ? (phtDay - 1 + 7) % 7 : phtDay; }
+function fmtPDT(h){ return toPDT(h).toString().padStart(2,'0') + ':00'; }
+
+// PDT coverage map
+const proposedPDTCov = (function(){
+  const cov = Array.from({length:7}, ()=>Array.from({length:24}, ()=>[]));
+  PROPOSED_BLOCKS.forEach(function(r){
+    if(r.dim) return;
+    const workDays = r.days || [0,1,2,3,4,5,6];
+    workDays.forEach(function(phtD){
+      for(let phtH=r.sh; phtH<r.eh; phtH++){
+        const pdtH = toPDT(phtH);
+        const pdtD = pdtDay(phtD, phtH);
+        if(pdtD >= 0 && pdtD < 7 && pdtH >= 0 && pdtH < 24){
+          cov[pdtD][pdtH].push({name:r.name, block:r.block, tl:r.tl});
+        }
+      }
+    });
+  });
+  return cov;
+})();
+
+// ── BUILD PDT SCHEDULE GRID ───────────────────────────────────────────────────
+function buildProposedPDTGrid(){
+  const grid = document.getElementById('proposedPDTGrid');
+  grid.innerHTML = '';
+
+  const corner = document.createElement('div');
+  corner.className = 'cs-corner'; corner.textContent = 'PDT';
+  grid.appendChild(corner);
+
+  DAYS.forEach(function(d){
+    const hdr = document.createElement('div'); hdr.className = 'cs-day-hdr';
+    hdr.innerHTML = `<div class="cs-dow">${d}</div>`;
+    grid.appendChild(hdr);
+  });
+
+  for(let hr=0; hr<24; hr++){
+    const tl = document.createElement('div'); tl.className = 'cs-time';
+    tl.textContent = `${hr.toString().padStart(2,'0')}:00`;
+    grid.appendChild(tl);
+
+    for(let di=0; di<7; di++){
+      const cell = document.createElement('div'); cell.className = 'cs-cell';
+
+      const shownAtThisHour = new Set();
+      PROPOSED_BLOCKS.forEach(function(r){
+        const workDays = r.days || [0,1,2,3,4,5,6];
+        const pdtStartH = toPDT(r.sh);
+        const phtDayForThisDi = r.sh < 15 ? (di + 1) % 7 : di;
+        const key = r.name + r.block + (r.dim?'-dim':'');
+        if(pdtStartH === hr && workDays.indexOf(phtDayForThisDi) !== -1 && !shownAtThisHour.has(key)){
+          shownAtThisHour.add(key);
+          const chip = document.createElement('span');
+          chip.className = r.tl ? `cs-chip tl-${r.block}` : `cs-chip ${r.block}`;
+          if(r.dim) chip.style.cssText = 'opacity:0.3;font-style:italic;';
+          chip.textContent = r.tl ? `★ ${r.name}` : r.name.replace(' - Key Team','').replace(' - SEO Team','');
+          if(!r.dim && r.name.includes('Key Team')){
+            const ks=document.createElement('span');
+            ks.style.cssText='color:#fbbf24;font-size:0.5rem;margin-left:2px;';
+            ks.textContent=' - Key Team'; chip.appendChild(ks);
+          }
+          if(!r.dim && r.name.includes('SEO Team')){
+            const ss=document.createElement('span');
+            ss.style.cssText='color:#e879f9;font-size:0.5rem;margin-left:2px;';
+            ss.textContent=' - SEO Team'; chip.appendChild(ss);
+          }
+          chip.title = `${r.name} · ${fmtPDT(r.sh)}–${fmtPDT(r.eh)} PDT · (${r.sh.toString().padStart(2,'0')}:00–${r.eh.toString().padStart(2,'0')}:00 PHT)${r.dim?' (rest day)':''}`;
+          cell.appendChild(chip);
+        }
+      });
+
+      grid.appendChild(cell);
+    }
+  }
+}
+
+// ── BUILD PDT HEATMAP ─────────────────────────────────────────────────────────
+function buildProposedPDTHeatmap(){
+  const grid = document.getElementById('proposedPDTHeatmap');
+  grid.innerHTML = '';
+  const corner = document.createElement('div');
+  corner.className='hm-tl'; corner.textContent='PDT'; grid.appendChild(corner);
+  DAYS.forEach(function(d){
+    const h=document.createElement('div'); h.className='hm-th';
+    h.innerHTML=`${d}`; grid.appendChild(h);
+  });
+  for(let hr=0;hr<24;hr++){
+    const tl=document.createElement('div'); tl.className='hm-tl';
+    tl.textContent=`${hr.toString().padStart(2,'0')}:00`; grid.appendChild(tl);
+    for(let di=0;di<7;di++){
+      const entries=proposedPDTCov[di][hr];
+      const count=[...new Set(entries.map(e=>e.name))].length;
+      const c=hmColor(count);
+      const cell=document.createElement('div'); cell.className='hm-cell';
+      cell.style.cssText=`background:${c.bg};color:${c.text}`;
+      cell.textContent=count;
+      const names=[...new Set(entries.map(e=>e.name))].join(', ')||'Nobody';
+      cell.addEventListener('mousemove',ev=>showTip(ev,`<div class="tt-title">${DAYS[di]} ${hr.toString().padStart(2,'0')}:00 PDT · ${count} reps</div><div class="tt-names">${names}</div>`));
+      cell.addEventListener('mouseleave',hideTip);
+      grid.appendChild(cell);
+    }
+  }
+}
+
+// ── BUILD PDT TEAM CARDS ──────────────────────────────────────────────────────
+function buildProposedPDTCards(){
+  const container = document.getElementById('proposedPDTCards');
+  container.innerHTML = '';
+
+  const blocks = [
+    { key:'day',   label:'Day Team',   phtHours:'00:00–08:00 PHT', pdtHours:'09:00 (prev day) – 17:00 PDT', tl:'Greg',     color:'#7c3aed', textColor:'#c4b5fd' },
+    { key:'night', label:'Night Team', phtHours:'08:00–16:00 PHT', pdtHours:'17:00–01:00 PDT',              tl:'Richelle', color:'#0891b2', textColor:'#7dd3fc' },
+    { key:'mid',   label:'Mid Shift',  phtHours:'16:00–24:00 PHT', pdtHours:'01:00–09:00 PDT',              tl:'Jurenne',  color:'#059669', textColor:'#6ee7b7' },
+  ];
+
+  const seen = new Set();
+  const deduped = PROPOSED_BLOCKS.filter(r=>{
+    const k=r.name+r.block+(r.dim?'-dim':'');
+    if(seen.has(k)) return false;
+    seen.add(k); return true;
+  }).filter(r=>!r.dim);
+
+  blocks.forEach(function(b){
+    const members = deduped.filter(r=>r.block===b.key);
+    const section = document.createElement('div');
+    section.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;';
+
+    const hdr = document.createElement('div');
+    hdr.style.cssText = `background:${b.color}22;border-bottom:1px solid ${b.color}44;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;`;
+    hdr.innerHTML = `
+      <div>
+        <div style="font-size:1rem;font-weight:800;color:${b.textColor}">${b.label}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);margin-top:2px">${b.pdtHours} · TL: ${b.tl}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);opacity:0.6;margin-top:1px">(${b.phtHours})</div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted)">${members.length} members</div>`;
+    section.appendChild(hdr);
+
+    const body = document.createElement('div');
+    body.style.cssText = 'padding:1rem 1.25rem;display:flex;flex-wrap:wrap;gap:8px;';
+    members.forEach(function(r){
+      const isKeyTeam = r.name.includes('Key Team');
+      const isSeoTeam = r.name.includes('SEO Team');
+      const displayName = r.name.replace(' - Key Team','').replace(' - SEO Team','');
+      const pdtS = fmtPDT(r.sh); const pdtE = fmtPDT(r.eh);
+      const pill = document.createElement('span');
+      if(r.tl){
+        pill.style.cssText=`display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font-size:0.72rem;font-weight:700;background:${b.color};color:#fff;`;
+        pill.textContent=`★ ${displayName}`;
+      } else {
+        pill.style.cssText=`display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font-size:0.72rem;font-weight:500;background:${b.color}22;color:${b.textColor};border:1px solid ${b.color}44;`;
+        pill.textContent=displayName;
+        if(isKeyTeam){ const kt=document.createElement('span'); kt.style.cssText='color:#fbbf24;font-size:0.6rem;font-weight:700;'; kt.textContent=' - Key Team'; pill.appendChild(kt); }
+        if(isSeoTeam){ const st=document.createElement('span'); st.style.cssText='color:#e879f9;font-size:0.6rem;font-weight:700;'; st.textContent=' - SEO Team'; pill.appendChild(st); }
+      }
+      pill.title = `${r.sh.toString().padStart(2,'0')}:00–${r.eh.toString().padStart(2,'0')}:00 PHT = ${pdtS}–${pdtE} PDT`;
+      body.appendChild(pill);
+    });
+    section.appendChild(body);
+    container.appendChild(section);
+  });
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 function switchTab(id, btn){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -1098,9 +1383,12 @@ function switchTab(id, btn){
   btn.classList.add('active');
 }
 
-buildProposedGrid();
-buildProposedHeatmap();
-buildTeam();
+buildProposedNewGrid();
+buildProposedNewHeatmap();
+buildProposedTeamCards();
+buildProposedPDTGrid();
+buildProposedPDTHeatmap();
+buildProposedPDTCards();
 buildNewbiesSchedule();
 buildNewbiesHeatmap();
 buildNewbieCards();
